@@ -12,6 +12,7 @@ const accountParams = { params: Promise.resolve({ accountId: "acc_123" }) };
 const potParams = { params: Promise.resolve({ accountId: "acc_123", potId: "pot_123" }) };
 
 beforeEach(() => {
+  vi.stubEnv("BFF_API_KEY", "test-bff-key");
   vi.stubEnv("BASE_URL", "https://backend.example");
   vi.stubEnv("SESSION_COOKIE_NAME", "custom-session");
   cookieGet.mockReset().mockReturnValue({ value: "secret-token" });
@@ -45,7 +46,11 @@ describe("console sessions and metadata", () => {
     expect(await getConsoleAccountName("acc_123")).toBe("Joint Account");
     expect(fetchMock).toHaveBeenCalledWith(new URL("https://backend.example/accounts-with-balances"), expect.objectContaining({
       cache: "no-store",
-      headers: { Accept: "application/json", Authorization: "Bearer secret-token" },
+      headers: new Headers({
+        Accept: "application/json",
+        Authorization: "Bearer secret-token",
+        "X-BFF-API-Key": "test-bff-key",
+      }),
     }));
   });
 

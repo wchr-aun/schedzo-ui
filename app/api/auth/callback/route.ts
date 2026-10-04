@@ -1,7 +1,7 @@
 import { apiError } from "@/lib/errors/api-error.server";
 import { NextRequest, NextResponse } from "next/server";
 import { REFRESH_TOKEN_COOKIE_NAME } from "@/lib/auth/cookie-names";
-import { getBackendBaseUrl } from "@/lib/auth/backend-fetch.server";
+import { fetchBackend, getBackendBaseUrl } from "@/lib/auth/backend-fetch.server";
 
 type CallbackResponse = {
   token?: unknown;
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
     callbackUrl.searchParams.set("code", code);
     callbackUrl.searchParams.set("state", state);
 
-    const backendResponse = await fetch(callbackUrl, {
+    const backendResponse = await fetchBackend(callbackUrl, {
       headers: {
         Accept: "application/json",
         Cookie: `monzo_oauth_state=${oauthStateCookie}`,

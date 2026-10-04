@@ -1,5 +1,5 @@
 import { apiError } from "@/lib/errors/api-error.server";
-import { getBackendBaseUrl } from "@/lib/auth/backend-fetch.server";
+import { fetchBackend, getBackendBaseUrl } from "@/lib/auth/backend-fetch.server";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -13,7 +13,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const backendResponse = await fetch(`${baseUrl}/monzo-redirect`, {
+    const backendResponse = await fetchBackend(`${baseUrl}/monzo-redirect`, {
       headers: { Accept: "text/html" },
       cache: "no-store",
       redirect: "manual",

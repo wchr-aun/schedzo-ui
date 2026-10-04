@@ -24,6 +24,7 @@ describe("scheduled transfers route", () => {
   const fetchMock = vi.fn<typeof fetch>();
 
   beforeEach(() => {
+    vi.stubEnv("BFF_API_KEY", "test-bff-key");
     vi.stubEnv("BASE_URL", "https://backend.example/");
     vi.stubEnv("SESSION_COOKIE_NAME", "session");
     cookieGet.mockReset();
@@ -72,10 +73,11 @@ describe("scheduled transfers route", () => {
         "https://backend.example/scheduled-transfers?account_id=acc_123&pot_id=pot_456&limit=50&offset=0&status=completed%2Cpending%2Cfailed",
       ),
       expect.objectContaining({
-        headers: {
+        headers: new Headers({
           Accept: "application/json",
           Authorization: "Bearer secret-token",
-        },
+          "X-BFF-API-Key": "test-bff-key",
+        }),
         cache: "no-store",
       }),
     );
@@ -232,11 +234,12 @@ describe("scheduled transfers route", () => {
       "https://backend.example/schedule-transfer",
       expect.objectContaining({
         method: "POST",
-        headers: {
+        headers: new Headers({
           Accept: "application/json",
           Authorization: "Bearer secret-token",
           "Content-Type": "application/json",
-        },
+          "X-BFF-API-Key": "test-bff-key",
+        }),
         body: JSON.stringify(payload),
         cache: "no-store",
       }),

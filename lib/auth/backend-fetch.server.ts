@@ -50,7 +50,7 @@ async function requestRefreshedTokens(refreshToken: string): Promise<RefreshResu
   }
 
   try {
-    const backendResponse = await fetch(`${baseUrl}/auth/refresh`, {
+    const backendResponse = await fetchBackend(`${baseUrl}/auth/refresh`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -161,14 +161,39 @@ export async function refreshSession(): Promise<RefreshResult> {
   return result;
 }
 
+/** Attach the service credential only to the configured backend, without following redirects. */
+export async function fetchBackend(
+  url: string | URL,
+  init: RequestInit,
+): Promise<Response> {
+  const baseUrl = getBackendBaseUrl();
+  const apiKey = process.env.BFF_API_KEY?.trim();
+
+  if (!baseUrl || !apiKey) {
+    throw new Error("Backend service authentication is not configured");
+  }
+
+  const target = new URL(url);
+  if (target.origin !== new URL(baseUrl).origin || target.username || target.password) {
+    throw new Error("Invalid backend request destination");
+  }
+
+  const headers = new Headers(init.headers);
+  headers.set("X-BFF-API-Key", apiKey);
+  return fetch(url, {
+    ...init,
+    headers,
+    cache: "no-store",
+    redirect: init.redirect === "manual" ? "manual" : "error",
+  });
+}
+
 export async function fetchAuthenticatedBackend(
   url: string | URL,
   accessToken: string,
   init: RequestInit,
 ): Promise<Response> {
-  const headers = {
-    ...(init.headers as Record<string, string> | undefined),
-    Authorization: `Bearer ${accessToken}`,
-  };
-  return fetch(url, { ...init, headers, cache: "no-store", redirect: "error" });
+  const headers = new Headers(init.headers);
+  headers.set("Authorization", `Bearer ${accessToken}`);
+  return fetchBackend(url, { ...init, headers });
 }

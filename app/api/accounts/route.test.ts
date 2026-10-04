@@ -43,6 +43,7 @@ describe.each(routes)("$name response validation", ({ name, get, valid, expected
   const fetchMock = vi.fn<typeof fetch>();
 
   beforeEach(() => {
+    vi.stubEnv("BFF_API_KEY", "test-bff-key");
     vi.stubEnv("BASE_URL", "https://backend.example");
     vi.stubEnv("SESSION_COOKIE_NAME", "session");
     cookieGet.mockReset().mockReturnValue({ value: "secret-token" });
@@ -57,7 +58,11 @@ describe.each(routes)("$name response validation", ({ name, get, valid, expected
     expect(await response.json()).toEqual(expected);
     expect(response.headers.get("Cache-Control")).toBe("no-store");
     expect(fetchMock).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({
-      headers: { Accept: "application/json", Authorization: "Bearer secret-token" },
+      headers: new Headers({
+        Accept: "application/json",
+        Authorization: "Bearer secret-token",
+        "X-BFF-API-Key": "test-bff-key",
+      }),
       cache: "no-store",
     }));
   });
@@ -93,6 +98,7 @@ describe.each(routes)("$name response validation", ({ name, get, valid, expected
 
 describe("backend response shapes", () => {
   beforeEach(() => {
+    vi.stubEnv("BFF_API_KEY", "test-bff-key");
     vi.stubEnv("BASE_URL", "https://backend.example");
     cookieGet.mockReturnValue({ value: "secret-token" });
   });

@@ -20,6 +20,7 @@ describe("callback route", () => {
   beforeEach(() => {
     fetchMock.mockReset();
     vi.stubGlobal("fetch", fetchMock);
+    vi.stubEnv("BFF_API_KEY", "test-bff-key");
     vi.stubEnv("BASE_URL", "https://backend.example");
     vi.stubEnv("SESSION_COOKIE_NAME", "custom-session");
   });
@@ -36,11 +37,23 @@ describe("callback route", () => {
     expect(response.status).toBe(204);
     expect(await response.text()).toBe("");
     expect(response.cookies.get("custom-session")?.value).toBe(payload.token);
+    const headers = new Headers(fetchMock.mock.calls[0][1]?.headers);
+    expect(headers.get("X-BFF-API-Key")).toBe("test-bff-key");
+    expect(headers.get("Cookie")).toBe("monzo_oauth_state=private-state");
+    expect(response.headers.get("X-BFF-API-Key")).toBeNull();
   });
 
   it.each(["code=private-code", "state=private-state"])("rejects missing parameters without contacting the backend: %s", async (query) => {
     expect((await GET(request(query))).status).toBe(400);
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("does not contact the backend or set cookies without the service key", async () => {
+    vi.stubEnv("BFF_API_KEY", "");
+    const response = await GET(request());
+    expect(response.status).toBe(502);
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(response.headers.get("set-cookie")).toBeNull();
   });
 
   it("handles backend failures without setting cookies", async () => {

@@ -11,6 +11,7 @@ describe("refresh route", () => {
     setCookie.mockReset();
     fetchMock.mockReset();
     vi.stubGlobal("fetch", fetchMock);
+    vi.stubEnv("BFF_API_KEY", "test-bff-key");
     vi.stubEnv("BASE_URL", "https://backend.example");
     vi.stubEnv("SESSION_COOKIE_NAME", "custom-session");
   });
@@ -21,10 +22,18 @@ describe("refresh route", () => {
     fetchMock.mockResolvedValueOnce(Response.json({ token: "access-secret", expiresIn: 60, refreshToken: "rotated-secret", refreshExpiresIn: 600 }));
     const response = await POST(sameOriginRequest());
     expect(response.status).toBe(204);
+    expect(new Headers(fetchMock.mock.calls[0][1]?.headers).get("X-BFF-API-Key")).toBe("test-bff-key");
     expect(await response.text()).toBe("");
     expect(fetchMock).toHaveBeenCalledWith("https://backend.example/auth/refresh", expect.objectContaining({ method: "POST", body: JSON.stringify({ refresh_token: "refresh-secret" }) }));
     expect(setCookie).toHaveBeenCalledWith(expect.objectContaining({ name: "custom-session", value: "access-secret", httpOnly: true }));
     expect(setCookie).toHaveBeenCalledWith(expect.objectContaining({ name: "monzo_refresh_token", value: "rotated-secret", httpOnly: true }));
+  });
+
+  it("does not contact the backend or alter cookies without the service key", async () => {
+    vi.stubEnv("BFF_API_KEY", "");
+    expect((await POST(sameOriginRequest())).status).toBe(502);
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(setCookie).not.toHaveBeenCalled();
   });
 
   it("rejects missing cookies without contacting the backend", async () => {

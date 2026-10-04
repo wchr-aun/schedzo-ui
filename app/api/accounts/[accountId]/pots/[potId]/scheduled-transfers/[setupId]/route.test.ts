@@ -28,6 +28,7 @@ describe("cancel scheduled transfer route", () => {
   const fetchMock = vi.fn<typeof fetch>();
 
   beforeEach(() => {
+    vi.stubEnv("BFF_API_KEY", "test-bff-key");
     vi.stubEnv("BASE_URL", "https://backend.example/");
     vi.stubEnv("SESSION_COOKIE_NAME", "session");
     cookieGet.mockReset();
@@ -50,10 +51,11 @@ describe("cancel scheduled transfer route", () => {
       "https://backend.example/schedule-transfer/setup_1",
       expect.objectContaining({
         method: "DELETE",
-        headers: {
+        headers: new Headers({
           Accept: "application/json",
           Authorization: "Bearer secret-token",
-        },
+          "X-BFF-API-Key": "test-bff-key",
+        }),
         cache: "no-store",
       }),
     );

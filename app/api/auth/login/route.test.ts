@@ -4,6 +4,7 @@ import { GET } from "./route";
 describe("login redirect", () => {
   const fetchMock = vi.fn<typeof fetch>();
   beforeEach(() => {
+    vi.stubEnv("BFF_API_KEY", "test-bff-key");
     vi.stubEnv("BASE_URL", "https://backend.example");
     vi.stubGlobal("fetch", fetchMock);
     fetchMock.mockReset();
@@ -22,12 +23,22 @@ describe("login redirect", () => {
     if (json) expect(await response.json()).toEqual({ url: "https://auth.example/authorize" });
     else expect(response.headers.get("location")).toBe("https://auth.example/authorize");
     expect(fetchMock.mock.calls[0][1]).toMatchObject({ redirect: "manual" });
+    expect(new Headers(fetchMock.mock.calls[0][1]?.headers).get("X-BFF-API-Key")).toBe("test-bff-key");
+    expect(response.headers.get("X-BFF-API-Key")).toBeNull();
   });
 
   it("returns a safe backend error without setting cookies when the backend fails", async () => {
     fetchMock.mockRejectedValue(new Error("private backend details"));
     const response = await GET(new Request("https://frontend.example/api/auth/login?format=json"));
     expect(await response.json()).toEqual({ source: "backend", error: "login_unavailable" });
+    expect(response.headers.get("set-cookie")).toBeNull();
+  });
+
+  it("does not contact the backend or set cookies without the service key", async () => {
+    vi.stubEnv("BFF_API_KEY", "");
+    const response = await GET(new Request("https://frontend.example/api/auth/login"));
+    expect(response.status).toBe(502);
+    expect(fetchMock).not.toHaveBeenCalled();
     expect(response.headers.get("set-cookie")).toBeNull();
   });
 
