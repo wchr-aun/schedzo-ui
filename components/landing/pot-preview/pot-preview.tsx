@@ -50,7 +50,7 @@ export function PotPreview({transfersPage}: {transfersPage: ScheduledTransfersPa
         </div>
         <div className={styles.homeIndicator} aria-hidden="true" />
       </div>
-      <figcaption className={styles.caption}><span className={styles.captionDot} /> Your plans, at a glance. <span>Example data</span></figcaption>
+      <figcaption className={styles.caption}><span className={styles.captionDot} /> Your plans, at a glance. </figcaption>
     </figure>
   );
 }

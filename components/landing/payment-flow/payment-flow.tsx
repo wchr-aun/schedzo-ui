@@ -110,7 +110,7 @@ export function PaymentFlow({transfer}: {transfer: ScheduledTransfer}) {
           ))}
         </div>
       </div>
-      <figcaption>One less thing to remember.</figcaption>
+      {step >= 3 ? <figcaption>One less thing to remember.</figcaption> : null}
     </figure>
   );
 }

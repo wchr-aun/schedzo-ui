@@ -101,8 +101,10 @@ export function LandingPage() {
                 there isn&apos;t enough money for the payment, <strong>it&apos;s easy to forget</strong>.
               </p>
               <figure className={styles.declinedPreview}>
-                <MonzoTransaction kind="declined" amount={exampleRentAmount * 100} recipient="Landlord" initials="L" />
-                <figcaption>Example of a declined scheduled payment.</figcaption>
+                <ScrollReveal>
+                  <MonzoTransaction revealTrigger="mount" kind="declined" amount={exampleRentAmount * 100} recipient="Landlord" initials="L" />
+                  <figcaption>Example of a declined scheduled payment.</figcaption>
+                </ScrollReveal>
               </figure>
               <p>
                 I wanted to <strong>automate that last step</strong>, so the money can stay in
@@ -111,7 +113,7 @@ export function LandingPage() {
               </p>
             </ScrollReveal>
             <ScrollReveal>
-              <h3>Why I built this.</h3>
+              <h3>Why build my own?</h3>
               <p>
                 There&apos;s already a platform that can do this: <ExternalLink href="https://ifttt.com/applets/d3xg75n8-move-money-daily-from-a-monzo-pot-to-your-account">IFTTT</ExternalLink> lets
                 us schedule withdrawals from pots to the main balance. But its free tier only
@@ -130,10 +132,10 @@ export function LandingPage() {
           <ScrollReveal className={styles.buildHeading}>
             <div>
               <p className={styles.eyebrow}>02 / From idea to app</p>
-              <h2 id="building-heading">What I&apos;ve built.<br />What you can do.</h2>
+              <h2 id="building-heading">So I built Schedzo.</h2>
             </div>
             <p className={styles.buildDescription}>
-              I&apos;ve built a small web app that helps schedule transfers into and out of pots,
+              A small web app that helps schedule transfers into and out of pots,
               without a limit on the number of scheduled transfers you can create.
             </p>
           </ScrollReveal>
