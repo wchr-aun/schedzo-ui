@@ -33,6 +33,7 @@ type ScheduleTransferRequest = {
 
 const transferIntervals = ["daily", "weekly", "monthly"] as const;
 const transferTypes = ["deposit", "withdraw"] as const;
+const MAX_SCHEDULE_REQUEST_BYTES = 16 * 1024;
 
 const scheduleTransferKeys = [
   "datetime",
@@ -192,6 +193,46 @@ function isScheduleTransferRequest(
   );
 }
 
+async function readScheduleRequest(request: Request): Promise<{ payload?: unknown; error?: string; status?: number }> {
+  const contentType = request.headers.get("content-type")?.split(";", 1)[0].trim().toLowerCase();
+  if (contentType !== "application/json") return { error: "json_content_type_required", status: 415 };
+
+  const contentLength = request.headers.get("content-length");
+  if (contentLength !== null) {
+    if (!/^\d+$/.test(contentLength)) return { error: "invalid_request", status: 400 };
+    if (Number(contentLength) > MAX_SCHEDULE_REQUEST_BYTES) {
+      return { error: "request_too_large", status: 413 };
+    }
+  }
+
+  if (!request.body) return { error: "invalid_request", status: 400 };
+
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      size += value.byteLength;
+      if (size > MAX_SCHEDULE_REQUEST_BYTES) {
+        await reader.cancel();
+        return { error: "request_too_large", status: 413 };
+      }
+      chunks.push(value);
+    }
+    const body = new Uint8Array(size);
+    let offset = 0;
+    for (const chunk of chunks) {
+      body.set(chunk, offset);
+      offset += chunk.byteLength;
+    }
+    return { payload: JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(body)) as unknown };
+  } catch {
+    return { error: "invalid_request", status: 400 };
+  }
+}
+
 function toScheduledTransfer(value: ScheduledTransfer): ScheduledTransfer {
   return {
     setup_id: value.setup_id,
@@ -313,22 +354,6 @@ export async function POST(request: Request, context: RouteContext) {
     );
   }
 
-  let payload: unknown;
-
-  try {
-    payload = await request.json();
-  } catch {
-    return apiError({ error: "invalid_request" }, { status: 400 });
-  }
-
-  if (
-    !isScheduleTransferRequest(payload) ||
-    payload.account_id !== accountId ||
-    payload.pot_id !== potId
-  ) {
-    return apiError({ error: "invalid_request" }, { status: 400 });
-  }
-
   const { token, baseUrl } = await getBackendDetails();
 
   if (!token) {
@@ -340,6 +365,18 @@ export async function POST(request: Request, context: RouteContext) {
       { error: "authentication_not_configured" },
       { status: 500 },
     );
+  }
+
+  const parsed = await readScheduleRequest(request);
+  if (parsed.error) return apiError({ error: parsed.error }, { status: parsed.status! });
+  const payload = parsed.payload;
+
+  if (
+    !isScheduleTransferRequest(payload) ||
+    payload.account_id !== accountId ||
+    payload.pot_id !== potId
+  ) {
+    return apiError({ error: "invalid_request" }, { status: 400 });
   }
 
   try {

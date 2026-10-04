@@ -265,6 +265,34 @@ describe("scheduled transfers route", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  it("rejects scheduled transfer bodies above the size limit", async () => {
+    const response = await POST(
+      new Request("http://localhost", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Origin: "http://localhost" },
+        body: `${" ".repeat(16 * 1024)}{}`,
+      }),
+      context,
+    );
+
+    expect(response.status).toBe(413);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("rejects non-JSON transfer bodies", async () => {
+    const response = await POST(
+      new Request("http://localhost", {
+        method: "POST",
+        headers: { "Content-Type": "text/plain", Origin: "http://localhost" },
+        body: "{}",
+      }),
+      context,
+    );
+
+    expect(response.status).toBe(415);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it("rejects an invalid create response from the backend", async () => {
     fetchMock.mockResolvedValue(
       backendResponse({
