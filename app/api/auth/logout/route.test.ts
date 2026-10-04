@@ -12,6 +12,7 @@ describe("logout route", () => {
   const fetchMock = vi.fn<typeof fetch>();
 
   beforeEach(() => {
+    vi.stubEnv("BFF_API_KEY", "test-bff-key");
     vi.stubEnv("BASE_URL", "https://backend.example/");
     vi.stubEnv("SESSION_COOKIE_NAME", "monzo_session");
     cookieGet.mockReset().mockReturnValue({ value: token });
@@ -46,10 +47,11 @@ describe("logout route", () => {
       "https://backend.example/logout",
       expect.objectContaining({
         method: "POST",
-        headers: {
+        headers: new Headers({
           "Content-Type": "text/plain",
           Authorization: `Bearer ${token}`,
-        },
+          "X-BFF-API-Key": "test-bff-key",
+        }),
         body: "user_123",
         cache: "no-store",
       }),

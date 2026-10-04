@@ -77,7 +77,23 @@ Configure these server-only values in `.env.local`:
 | Variable | Purpose |
 | --- | --- |
 | `BASE_URL` | Origin of the authentication and scheduler backend |
+| `BFF_API_KEY` | Required server-only shared secret sent as `X-BFF-API-Key`; must match the backend |
 | `SESSION_COOKIE_NAME` | Frontend session-cookie name; defaults to `session` |
+
+Every server-to-backend request includes `X-BFF-API-Key`, including login,
+OAuth callback, session refresh, logout, account reads, and scheduled transfers.
+Set `BFF_API_KEY` in `.env.local` and your deployment's server environment to the
+same strong random secret configured on the backend. Never prefix it with
+`NEXT_PUBLIC_`, commit it, or include it in browser requests. Missing or blank keys
+stop backend requests; HTTPS is required except for loopback development.
+Backend redirects are not followed, so credentials cannot be forwarded to another
+service. The login route reads the redirect and separately navigates the browser
+without the service key.
+
+The backend must validate the header on the corresponding application endpoints;
+this repository only implements the caller. Keep user JWT and account/pot
+permission checks in place. Coordinate key rotation across both deployments.
+External callbacks and webhooks need their own authentication policy.
 
 The login link navigates to `/api/auth/login`. That same-origin route requests
 `${BASE_URL}/monzo-redirect` server-side and forwards its redirect to Monzo.

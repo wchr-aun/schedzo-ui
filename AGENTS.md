@@ -36,6 +36,7 @@ The pnpm version is pinned in `package.json` through the `packageManager` field.
 Required variables are documented in `.env.example`:
 
 - `BASE_URL`: server-only origin of the authentication backend.
+- `BFF_API_KEY`: required server-only shared secret sent as `X-BFF-API-Key`.
 - `SESSION_COOKIE_NAME`: name of the frontend session cookie.
 
 Never hardcode deployment URLs, JWTs, OAuth credentials, or other secrets in source files. Never commit `.env`, `.env.local`, private keys, package-manager authentication files, or Vercel metadata.
@@ -45,7 +46,8 @@ Do not rename `BASE_URL` to a `NEXT_PUBLIC_*` variable. Backend configuration mu
 ## Authentication rules
 
 - Browser code must call same-origin Next.js Route Handlers, not the backend IP directly.
-- The login link may navigate directly to `${BASE_URL}/monzo-redirect` in a new tab.
+- The login link must use `/api/auth/login` so the server can attach `X-BFF-API-Key`.
+- All backend requests must use the shared server-only backend fetch helpers; never expose the service key to browser JavaScript.
 - The backend callback response is expected to contain `{ "token": "<jwt>", "expiresIn": <seconds> }`. `expiresIn` is optional.
 - JWTs must never be returned to client-side JavaScript, placed in URLs, logged, or stored in local storage.
 - Session cookies must remain `HttpOnly`, `Secure` in production, `SameSite=Lax`, and scoped to `/`.
