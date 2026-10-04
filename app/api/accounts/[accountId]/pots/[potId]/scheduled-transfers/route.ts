@@ -172,6 +172,7 @@ function isScheduleTransferRequest(
     "datetime" in value &&
     typeof value.datetime === "string" &&
     isUkDateTime(value.datetime) &&
+    new Date(value.datetime).getTime() > Date.now() &&
     "interval" in value &&
     typeof value.interval === "string" &&
     transferIntervals.includes(
