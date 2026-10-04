@@ -22,6 +22,21 @@
   margin: 0;
 }
 
+.header .title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.title img {
+  width: 1em;
+  height: 1em;
+  flex: 0 0 auto;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-border);
+  object-fit: cover;
+}
+
 .header .eyebrow {
   margin: 0 0 var(--space-1);
   font-size: 0.7rem;

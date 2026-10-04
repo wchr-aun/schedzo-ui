@@ -8,9 +8,10 @@ type PageHeaderProps = {
   eyebrow?: string;
   subtitle?: string;
   title: string;
+  imageUrl?: string | null;
 };
 
-export function PageHeader({ backHref, backLabel, eyebrow, subtitle, title }: PageHeaderProps) {
+export function PageHeader({ backHref, backLabel, eyebrow, subtitle, title, imageUrl }: PageHeaderProps) {
   return (
     <>
       <Link className={styles.backLink} href={backHref}>
@@ -18,7 +19,10 @@ export function PageHeader({ backHref, backLabel, eyebrow, subtitle, title }: Pa
       </Link>
       <header className={styles.header}>
         {eyebrow ? <p className={styles.eyebrow}>{eyebrow}</p> : null}
-        <h1>{title}</h1>
+        <h1 className={imageUrl ? styles.title : undefined}>
+          {imageUrl ? <img src={imageUrl} alt="" width={48} height={48} decoding="async" referrerPolicy="no-referrer" /> : null}
+          {title}
+        </h1>
         {subtitle ? <p>{subtitle}</p> : null}
       </header>
     </>

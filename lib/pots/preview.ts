@@ -7,6 +7,6 @@ export const previewPot: Pot = {
   balance: 554_954,
   currency: "GBP",
   deleted: false,
-  cover_image_url: null,
+  cover_image_url: "https://public-images.monzo.com/pots/gallery_covers/rainy_day_v1.webp",
   type: "regular",
 };

@@ -7,6 +7,7 @@ import { CreateScheduledTransfer } from "@/components/scheduled-transfers/create
 import { InlineMessage } from "@/components/ui/inline-message/inline-message";
 import { LoadingIndicator } from "@/components/ui/loading-indicator/loading-indicator";
 import { Money } from "@/components/ui/money/money";
+import { getPotCoverImageUrl } from "@/lib/pots/cover-image";
 import { getPotsKey } from "@/lib/pots/keys";
 import useSWR from "swr";
 import styles from "./pot-details.module.css";
@@ -24,12 +25,14 @@ export function PotDetails({
     fetchPots,
   );
   const pot = pots?.find((candidate) => candidate.id === potId);
+  const coverImageUrl = pot ? getPotCoverImageUrl(pot.cover_image_url) : null;
   const header = (
     <PageHeader
       backHref={`${basePath}/account/${encodeURIComponent(accountId)}`}
       backLabel="Back to account"
       eyebrow="Your pot"
       title={pot ? pot.name || "Unnamed pot" : "Pot"}
+      imageUrl={coverImageUrl}
     />
   );
 
