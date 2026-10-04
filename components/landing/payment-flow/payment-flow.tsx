@@ -110,7 +110,7 @@ export function PaymentFlow({transfer}: {transfer: ScheduledTransfer}) {
           ))}
         </div>
       </div>
-      <figcaption>One less thing to remember. <span>Example flow. The payment is scheduled in Monzo.</span></figcaption>
+      <figcaption>One less thing to remember.</figcaption>
     </figure>
   );
 }
