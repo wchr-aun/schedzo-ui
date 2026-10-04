@@ -10,6 +10,8 @@ import { MoneyVisibilityToggle } from "@/components/ui/money-visibility-toggle/m
 import RootLayout from "@/app/layout";
 import { renderToStaticMarkup } from "react-dom/server";
 
+vi.mock("next/headers", () => ({ headers: async () => new Headers({ "x-nonce": "test-nonce" }) }));
+
 function Reports() {
   const toast = useToast();
   return <>
@@ -89,9 +91,9 @@ describe("global error reporting", () => {
     expect(screen.getByText("Could not load accounts.")).toBeInTheDocument();
   });
 
-  it("reports theme restoration failures from before hydration once, even when money restoration fails too", () => {
+  it("reports theme restoration failures from before hydration once, even when money restoration fails too", async () => {
     vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => { throw new Error("private storage details"); });
-    const html = renderToStaticMarkup(RootLayout({ children: null }));
+    const html = renderToStaticMarkup(await RootLayout({ children: null }));
     const script = new DOMParser().parseFromString(html, "text/html").querySelector("script")!.textContent!;
     new Function("document", "localStorage", script)(document, localStorage);
     expect(document.documentElement.dataset.themeStorageUnavailable).toBe("true");
