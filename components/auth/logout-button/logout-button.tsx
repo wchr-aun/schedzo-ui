@@ -22,18 +22,19 @@ export function LogoutButton({ onLogout }: { onLogout?: () => void }) {
     setIsLoggingOut(true);
     const toastId = toast.show({ tone: "progress", message: "Logging out…" });
 
+    async function clearPrivateData() {
+      await mutate(() => true, undefined, { revalidate: false });
+      for (const key of Array.from(cache.keys())) cache.delete(key);
+    }
+
     try {
       await request("/api/auth/logout", { method: "POST" }, "log out", false);
-
-      await mutate(() => true, undefined, { revalidate: false });
-
-      for (const key of Array.from(cache.keys())) {
-        cache.delete(key);
-      }
-
+      await clearPrivateData();
       toast.update(toastId, { tone: "success", colour: "info", message: "Logged out." });
       router.refresh();
     } catch (error) {
+      await clearPrivateData();
+      router.refresh();
       toast.reportError(error, { operation: "log out", toastId });
       setIsLoggingOut(false);
     }

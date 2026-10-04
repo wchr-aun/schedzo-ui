@@ -73,7 +73,7 @@ describe("logout route", () => {
 
     expect(response.status).toBe(401);
     expect(fetchMock).not.toHaveBeenCalled();
-    expect(response.headers.get("set-cookie")).toBeNull();
+    expect(response.headers.get("set-cookie")).toContain("Max-Age=0");
   });
 
   it("reports missing backend configuration", async () => {
@@ -83,26 +83,26 @@ describe("logout route", () => {
 
     expect(response.status).toBe(500);
     expect(fetchMock).not.toHaveBeenCalled();
-    expect(response.headers.get("set-cookie")).toBeNull();
+    expect(response.headers.get("set-cookie")).toContain("Max-Age=0");
   });
 
-  it.each([401, 403, 500])("preserves cookies when the backend returns %s", async (status) => {
+  it.each([401, 403, 500])("clears local cookies when the backend returns %s", async (status) => {
     fetchMock.mockResolvedValue(new Response("private backend error", { status }));
 
     const response = await POST(sameOriginRequest());
 
     expect(response.status).toBe(status < 500 ? status : 502);
     expect(await response.json()).toEqual({ source: "backend", error: "logout_failed" });
-    expect(response.headers.get("set-cookie")).toBeNull();
+    expect(response.headers.get("set-cookie")).toContain("Max-Age=0");
   });
 
-  it("preserves cookies when the backend is unavailable", async () => {
+  it("clears local cookies when the backend is unavailable", async () => {
     fetchMock.mockRejectedValue(new Error("Unavailable"));
 
     const response = await POST(sameOriginRequest());
 
     expect(response.status).toBe(502);
     expect(await response.json()).toEqual({ source: "backend", error: "logout_unavailable" });
-    expect(response.headers.get("set-cookie")).toBeNull();
+    expect(response.headers.get("set-cookie")).toContain("Max-Age=0");
   });
 });
