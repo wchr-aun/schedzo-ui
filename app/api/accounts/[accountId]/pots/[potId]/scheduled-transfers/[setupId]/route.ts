@@ -1,7 +1,7 @@
 import { apiError } from "@/lib/errors/api-error.server";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { fetchAuthenticatedBackend } from "@/lib/auth/backend-fetch.server";
+import { fetchAuthenticatedBackend, getBackendBaseUrl } from "@/lib/auth/backend-fetch.server";
 import { isSameOriginMutation } from "@/lib/auth/csrf.server";
 
 type RouteContext = {
@@ -34,7 +34,7 @@ export async function DELETE(request: Request, context: RouteContext) {
     return apiError({ error: "not_authenticated" }, { status: 401 });
   }
 
-  const baseUrl = process.env.BASE_URL?.replace(/\/+$/, "");
+  const baseUrl = getBackendBaseUrl();
 
   if (!baseUrl) {
     return apiError(

@@ -8,7 +8,7 @@ import {
   type ScheduledTransferStatus,
 } from "@/lib/scheduled-transfers/types";
 import { isScheduledTransfer } from "@/lib/scheduled-transfers/validation";
-import { fetchAuthenticatedBackend } from "@/lib/auth/backend-fetch.server";
+import { fetchAuthenticatedBackend, getBackendBaseUrl } from "@/lib/auth/backend-fetch.server";
 import { isSameOriginMutation } from "@/lib/auth/csrf.server";
 
 type ScheduledTransfersResponse = {
@@ -210,7 +210,7 @@ async function getBackendDetails() {
   const cookieStore = await cookies();
   const sessionCookieName = process.env.SESSION_COOKIE_NAME ?? "session";
   const token = cookieStore.get(sessionCookieName)?.value;
-  const baseUrl = process.env.BASE_URL?.replace(/\/+$/, "");
+  const baseUrl = getBackendBaseUrl();
 
   return { token, baseUrl };
 }

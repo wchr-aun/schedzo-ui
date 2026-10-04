@@ -5,6 +5,7 @@ import { fetchAuthenticatedBackend } from "@/lib/auth/backend-fetch.server";
 import { REFRESH_TOKEN_COOKIE_NAME } from "@/lib/auth/cookie-names";
 import { getUserId } from "@/lib/auth/session.server";
 import { isSameOriginMutation } from "@/lib/auth/csrf.server";
+import { getBackendBaseUrl } from "@/lib/auth/backend-fetch.server";
 
 export async function POST(request: Request) {
   if (!isSameOriginMutation(request)) {
@@ -21,7 +22,7 @@ export async function POST(request: Request) {
       return apiError({ error: "invalid_session" }, { status: 401 });
     }
 
-    const baseUrl = process.env.BASE_URL?.replace(/\/+$/, "");
+    const baseUrl = getBackendBaseUrl();
 
     if (!baseUrl) {
       return apiError(
