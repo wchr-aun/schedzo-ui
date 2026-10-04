@@ -4,8 +4,12 @@ import { NextResponse } from "next/server";
 import { fetchAuthenticatedBackend } from "@/lib/auth/backend-fetch.server";
 import { REFRESH_TOKEN_COOKIE_NAME } from "@/lib/auth/cookie-names";
 import { getUserId } from "@/lib/auth/session.server";
+import { isSameOriginMutation } from "@/lib/auth/csrf.server";
 
-export async function POST() {
+export async function POST(request: Request) {
+  if (!isSameOriginMutation(request)) {
+    return apiError({ error: "cross_origin_request_rejected" }, { status: 403 });
+  }
   const cookieStore = await cookies();
   const sessionCookieName = process.env.SESSION_COOKIE_NAME ?? "session";
   const token = cookieStore.get(sessionCookieName)?.value;

@@ -9,6 +9,7 @@ import {
 } from "@/lib/scheduled-transfers/types";
 import { isScheduledTransfer } from "@/lib/scheduled-transfers/validation";
 import { fetchAuthenticatedBackend } from "@/lib/auth/backend-fetch.server";
+import { isSameOriginMutation } from "@/lib/auth/csrf.server";
 
 type ScheduledTransfersResponse = {
   items: ScheduledTransfer[];
@@ -299,6 +300,10 @@ export async function GET(request: Request, context: RouteContext) {
 }
 
 export async function POST(request: Request, context: RouteContext) {
+  if (!isSameOriginMutation(request)) {
+    return apiError({ error: "cross_origin_request_rejected" }, { status: 403 });
+  }
+
   const { accountId, potId } = await context.params;
 
   if (!accountId.trim() || !potId.trim()) {

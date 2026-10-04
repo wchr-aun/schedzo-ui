@@ -15,10 +15,11 @@ describe("refresh route", () => {
     vi.stubEnv("SESSION_COOKIE_NAME", "custom-session");
   });
   afterEach(() => { vi.unstubAllGlobals(); vi.unstubAllEnvs(); });
+  const sameOriginRequest = () => new Request("https://frontend.example/api/auth/refresh", { method: "POST", headers: { Origin: "https://frontend.example" } });
 
   it("exchanges the HttpOnly token in the backend body without exposing tokens", async () => {
     fetchMock.mockResolvedValueOnce(Response.json({ token: "access-secret", expiresIn: 60, refreshToken: "rotated-secret", refreshExpiresIn: 600 }));
-    const response = await POST();
+    const response = await POST(sameOriginRequest());
     expect(response.status).toBe(204);
     expect(await response.text()).toBe("");
     expect(fetchMock).toHaveBeenCalledWith("https://backend.example/auth/refresh", expect.objectContaining({ method: "POST", body: JSON.stringify({ refresh_token: "refresh-secret" }) }));
@@ -28,13 +29,13 @@ describe("refresh route", () => {
 
   it("rejects missing cookies without contacting the backend", async () => {
     getCookie.mockReturnValue(undefined);
-    expect((await POST()).status).toBe(401);
+    expect((await POST(sameOriginRequest())).status).toBe(401);
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("does not set cookies for malformed backend responses", async () => {
     fetchMock.mockResolvedValueOnce(Response.json({ token: "access-secret" }));
-    expect((await POST()).status).toBe(502);
+    expect((await POST(sameOriginRequest())).status).toBe(502);
     expect(setCookie).not.toHaveBeenCalled();
   });
 });

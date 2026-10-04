@@ -41,7 +41,7 @@ describe("cancel scheduled transfer route", () => {
     const jsonSpy = vi.spyOn(backend, "json");
     fetchMock.mockResolvedValue(backend);
 
-    const response = await DELETE(new Request("http://localhost"), context);
+    const response = await DELETE(new Request("http://localhost", { headers: { Origin: "http://localhost" } }), context);
 
     expect(response.status).toBe(204);
     expect(await response.text()).toBe("");
@@ -64,7 +64,7 @@ describe("cancel scheduled transfer route", () => {
       backendResponse({ detail: "Not found" }, { ok: false, status: 404 }),
     );
 
-    const response = await DELETE(new Request("http://localhost"), context);
+    const response = await DELETE(new Request("http://localhost", { headers: { Origin: "http://localhost" } }), context);
 
     expect(response.status).toBe(404);
     expect(await response.json()).toEqual({ source: "backend", error: "cancel_transfer_failed" });
@@ -75,7 +75,7 @@ describe("cancel scheduled transfer route", () => {
       backendResponse({ setup_id: "another_setup", status: "deactivated" }),
     );
 
-    const response = await DELETE(new Request("http://localhost"), context);
+    const response = await DELETE(new Request("http://localhost", { headers: { Origin: "http://localhost" } }), context);
 
     expect(response.status).toBe(502);
     expect(await response.json()).toEqual({
@@ -86,7 +86,7 @@ describe("cancel scheduled transfer route", () => {
   it("does not call the backend without a session", async () => {
     cookieGet.mockReturnValue(undefined);
 
-    const response = await DELETE(new Request("http://localhost"), context);
+    const response = await DELETE(new Request("http://localhost", { headers: { Origin: "http://localhost" } }), context);
 
     expect(response.status).toBe(401);
     expect(fetchMock).not.toHaveBeenCalled();

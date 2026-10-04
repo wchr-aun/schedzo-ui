@@ -220,7 +220,7 @@ describe("scheduled transfers route", () => {
     const response = await POST(
       new Request("http://localhost", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Origin: "http://localhost" },
         body: JSON.stringify(payload),
       }),
       context,
@@ -247,7 +247,7 @@ describe("scheduled transfers route", () => {
     const response = await POST(
       new Request("http://localhost", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Origin: "http://localhost" },
         body: JSON.stringify({
           datetime: "2026-10-01T09:30:15+01:00",
           interval: "monthly",
@@ -278,7 +278,7 @@ describe("scheduled transfers route", () => {
     const response = await POST(
       new Request("http://localhost", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Origin: "http://localhost" },
         body: JSON.stringify({
           datetime: "2026-10-01T09:30:00+01:00",
           interval: "daily",
@@ -301,7 +301,7 @@ describe("scheduled transfers route", () => {
     const response = await POST(
       new Request("http://localhost", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Origin: "http://localhost" },
         body: JSON.stringify({
           datetime: "2026-10-01T09:30:00+01:00",
           interval: "monthly",
@@ -324,7 +324,7 @@ describe("scheduled transfers route", () => {
     const response = await POST(
       new Request("http://localhost", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Origin: "http://localhost" },
         body: JSON.stringify({
           datetime: "2026-01-01T09:30:00+00:00",
           interval: "monthly",
