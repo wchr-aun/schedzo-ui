@@ -45,7 +45,7 @@ controls and a not-allowed cursor. The landing page explains the motivation,
 illustrates a pot withdrawal followed by a payment scheduled in Monzo,
 shows three features and example Monzo notifications, and links to both public
 repositories. The hero's Curious how it works? Explore the code text links to
-the on-page open-source section. Its Try the demo button scrolls to a demo section before
+the on-page open-source section. Its Try the demo button scrolls to a demo section below
 open source, where the Open demo button opens `/demo` in a new tab. Scroll reveals animate
 this section; reaching the bottom of the page reveals any remaining hidden
 content, including the demo button.
@@ -108,6 +108,19 @@ pnpm build
 ```
 
 Tests use Vitest and Testing Library. TypeScript runs in strict mode.
+
+## Continuous integration
+
+GitHub Actions runs the test suite, TypeScript check, and production build for
+every pull request and every push to `main`. To prevent broken changes from
+merging, configure the `CI` status check as required in the `main` branch
+protection rule or ruleset.
+
+If Vercel is connected through its GitHub integration, enable a Vercel
+Deployment Check for the `CI` GitHub Action to hold production promotion until
+these checks pass. Vercel may still start its build while GitHub Actions runs;
+the Deployment Check gates promotion to production, rather than the start of
+the Vercel build.
 
 ## Project structure
 
