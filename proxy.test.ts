@@ -17,6 +17,16 @@ describe("security headers", () => {
     expect(response.headers.get("referrer-policy")).toBe("no-referrer");
   });
 
+  it("allows eval only in the development CSP", () => {
+    vi.stubEnv("NODE_ENV", "development");
+    const developmentCsp = proxy(new NextRequest("http://localhost/")).headers.get("content-security-policy");
+    expect(developmentCsp).toContain("'unsafe-eval'");
+
+    vi.stubEnv("NODE_ENV", "production");
+    const productionCsp = proxy(new NextRequest("https://app.example/")).headers.get("content-security-policy");
+    expect(productionCsp).not.toContain("'unsafe-eval'");
+  });
+
   it("sets HSTS only in production", () => {
     vi.stubEnv("NODE_ENV", "production");
     expect(proxy(new NextRequest("https://app.example/")).headers.get("strict-transport-security"))

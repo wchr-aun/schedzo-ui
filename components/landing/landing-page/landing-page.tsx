@@ -206,7 +206,7 @@ export function LandingPage() {
           <div className={styles.repositories}>
             <ScrollReveal>
               <RepositoryCard
-                href="https://github.com/wchr-aun/monzo-scheduler-ui"
+                href="https://github.com/wchr-aun/schedzo-ui"
                 title="Frontend code"
                 description="The website and console for your accounts, pots, and scheduled transfers."
                 stack={['TypeScript', 'Next.js']}
@@ -216,7 +216,7 @@ export function LandingPage() {
             </ScrollReveal>
             <ScrollReveal>
               <RepositoryCard
-                href="https://github.com/wchr-aun/monzo-scheduler"
+                href="https://github.com/wchr-aun/schedzo"
                 title="Backend code"
                 description="The scheduler that runs your transfers and sends updates to Monzo."
                 stack={['Python', 'FastAPI']}
