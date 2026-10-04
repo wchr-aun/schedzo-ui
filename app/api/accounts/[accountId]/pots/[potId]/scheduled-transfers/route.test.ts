@@ -42,7 +42,7 @@ describe("scheduled transfers route", () => {
             status: "pending",
             created_at: "2026-09-01T08:15:00Z",
             executed_at: null,
-            scheduled_for: "2026-10-01T09:30:00Z",
+            scheduled_for: "2030-10-01T09:30:00Z",
             interval: "monthly",
             type: "deposit",
             amount: 2500,
@@ -194,7 +194,7 @@ describe("scheduled transfers route", () => {
       status: "pending",
       created_at: "2026-09-01T08:15:00Z",
       executed_at: null,
-      scheduled_for: "2026-10-01T09:30:00+01:00",
+      scheduled_for: "2030-10-01T09:30:00+01:00",
       interval: "monthly",
       type: "deposit",
       amount: 2500,
@@ -209,7 +209,7 @@ describe("scheduled transfers route", () => {
       ),
     );
     const payload = {
-      datetime: "2026-10-01T09:30:00+01:00",
+      datetime: "2030-10-01T09:30:00+01:00",
       interval: "monthly",
       type: "deposit",
       amount: 2500,
@@ -220,7 +220,7 @@ describe("scheduled transfers route", () => {
     const response = await POST(
       new Request("http://localhost", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Origin: "http://localhost" },
         body: JSON.stringify(payload),
       }),
       context,
@@ -247,7 +247,7 @@ describe("scheduled transfers route", () => {
     const response = await POST(
       new Request("http://localhost", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Origin: "http://localhost" },
         body: JSON.stringify({
           datetime: "2026-10-01T09:30:15+01:00",
           interval: "monthly",
@@ -265,22 +265,71 @@ describe("scheduled transfers route", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  it("rejects a schedule in the past without calling the backend", async () => {
+    const response = await POST(
+      new Request("http://localhost", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Origin: "http://localhost" },
+        body: JSON.stringify({
+          datetime: "2020-01-01T09:30:00+00:00",
+          interval: "monthly",
+          type: "deposit",
+          amount: 2500,
+          pot_id: "pot_456",
+          account_id: "acc_123",
+        }),
+      }),
+      context,
+    );
+
+    expect(response.status).toBe(400);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("rejects scheduled transfer bodies above the size limit", async () => {
+    const response = await POST(
+      new Request("http://localhost", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Origin: "http://localhost" },
+        body: `${" ".repeat(16 * 1024)}{}`,
+      }),
+      context,
+    );
+
+    expect(response.status).toBe(413);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("rejects non-JSON transfer bodies", async () => {
+    const response = await POST(
+      new Request("http://localhost", {
+        method: "POST",
+        headers: { "Content-Type": "text/plain", Origin: "http://localhost" },
+        body: "{}",
+      }),
+      context,
+    );
+
+    expect(response.status).toBe(415);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it("rejects an invalid create response from the backend", async () => {
     fetchMock.mockResolvedValue(
       backendResponse({
         status: "scheduled",
         setup_id: "setup_1",
         transfer_id: "transfer_1",
-        next_run_at: "2026-10-01T09:30:00+01:00",
+        next_run_at: "2030-10-01T09:30:00+01:00",
       }),
     );
 
     const response = await POST(
       new Request("http://localhost", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Origin: "http://localhost" },
         body: JSON.stringify({
-          datetime: "2026-10-01T09:30:00+01:00",
+          datetime: "2030-10-01T09:30:00+01:00",
           interval: "daily",
           type: "withdraw",
           amount: 2500,
@@ -301,9 +350,9 @@ describe("scheduled transfers route", () => {
     const response = await POST(
       new Request("http://localhost", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Origin: "http://localhost" },
         body: JSON.stringify({
-          datetime: "2026-10-01T09:30:00+01:00",
+          datetime: "2030-10-01T09:30:00+01:00",
           interval: "monthly",
           type: "deposit",
           amount: 2500,
@@ -324,7 +373,7 @@ describe("scheduled transfers route", () => {
     const response = await POST(
       new Request("http://localhost", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Origin: "http://localhost" },
         body: JSON.stringify({
           datetime: "2026-01-01T09:30:00+00:00",
           interval: "monthly",

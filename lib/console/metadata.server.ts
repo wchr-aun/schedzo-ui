@@ -7,6 +7,7 @@ import { getAccounts } from "@/lib/accounts/validation";
 import { fetchAuthenticatedBackend } from "@/lib/auth/backend-fetch.server";
 import { getUserId } from "@/lib/auth/session.server";
 import { getPots } from "@/lib/pots/validation";
+import { getBackendBaseUrl } from "@/lib/auth/backend-fetch.server";
 
 export async function requireConsoleSession() {
   const cookieStore = await cookies();
@@ -18,7 +19,7 @@ export async function requireConsoleSession() {
 }
 
 async function fetchMetadataPayload(path: string, token: string, accountId?: string): Promise<unknown> {
-  const baseUrl = process.env.BASE_URL?.replace(/\/+$/, "");
+  const baseUrl = getBackendBaseUrl();
   if (!baseUrl) return null;
 
   try {
@@ -27,6 +28,7 @@ async function fetchMetadataPayload(path: string, token: string, accountId?: str
     const response = await fetchAuthenticatedBackend(url, token, {
       headers: { Accept: "application/json" },
       signal: AbortSignal.timeout(5_000),
+      redirect: "error",
     });
     return response.ok ? await response.json() : null;
   } catch {

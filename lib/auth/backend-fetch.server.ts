@@ -18,6 +18,24 @@ type RefreshResult = {
   };
 };
 
+/** Return a safe backend origin, allowing plain HTTP only for local development. */
+export function getBackendBaseUrl(): string | null {
+  const configured = process.env.BASE_URL?.trim();
+  if (!configured) return null;
+
+  try {
+    const url = new URL(configured);
+    const isLoopback = ["localhost", "127.0.0.1", "::1", "[::1]"].includes(url.hostname);
+    const secureTransport = url.protocol === "https:" ||
+      (url.protocol === "http:" && process.env.NODE_ENV !== "production" && isLoopback);
+
+    if (!secureTransport || url.username || url.password || url.search || url.hash) return null;
+    return url.href.replace(/\/+$/, "");
+  } catch {
+    return null;
+  }
+}
+
 function positiveSeconds(value: unknown): number | undefined {
   return typeof value === "number" && Number.isSafeInteger(value) && value > 0
     ? value
@@ -25,7 +43,7 @@ function positiveSeconds(value: unknown): number | undefined {
 }
 
 async function requestRefreshedTokens(refreshToken: string): Promise<RefreshResult> {
-  const baseUrl = process.env.BASE_URL?.replace(/\/+$/, "");
+  const baseUrl = getBackendBaseUrl();
 
   if (!baseUrl) {
     return { status: 500 };
@@ -40,6 +58,7 @@ async function requestRefreshedTokens(refreshToken: string): Promise<RefreshResu
       },
       body: JSON.stringify({ refresh_token: refreshToken }),
       cache: "no-store",
+      redirect: "error",
       signal: AbortSignal.timeout(15_000),
     });
 
@@ -151,5 +170,5 @@ export async function fetchAuthenticatedBackend(
     ...(init.headers as Record<string, string> | undefined),
     Authorization: `Bearer ${accessToken}`,
   };
-  return fetch(url, { ...init, headers, cache: "no-store" });
+  return fetch(url, { ...init, headers, cache: "no-store", redirect: "error" });
 }

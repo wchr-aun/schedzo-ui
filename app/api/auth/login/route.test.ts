@@ -21,6 +21,7 @@ describe("login redirect", () => {
     expect(response.headers.get("set-cookie")).toContain("HttpOnly");
     if (json) expect(await response.json()).toEqual({ url: "https://auth.example/authorize" });
     else expect(response.headers.get("location")).toBe("https://auth.example/authorize");
+    expect(fetchMock.mock.calls[0][1]).toMatchObject({ redirect: "manual" });
   });
 
   it("returns a safe backend error without setting cookies when the backend fails", async () => {
@@ -36,5 +37,12 @@ describe("login redirect", () => {
     expect(response.status).toBe(502);
     expect(await response.json()).toMatchObject({ source: "backend", error: "invalid_login_redirect" });
     expect(response.headers.get("set-cookie")).toBeNull();
+  });
+
+  it("rejects unencrypted remote authorization redirects", async () => {
+    fetchMock.mockResolvedValue(new Response(null, { status: 302, headers: { location: "http://auth.example/authorize" } }));
+    const response = await GET(new Request("https://frontend.example/api/auth/login?format=json"));
+    expect(response.status).toBe(502);
+    expect(await response.json()).toMatchObject({ error: "invalid_login_redirect" });
   });
 });

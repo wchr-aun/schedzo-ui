@@ -6,6 +6,7 @@ const cookieGet = vi.hoisted(() => vi.fn());
 vi.mock("next/headers", () => ({ cookies: async () => ({ get: cookieGet }) }));
 
 const token = `header.${Buffer.from(JSON.stringify({ sub: "user_123" })).toString("base64url")}.signature`;
+const sameOriginRequest = () => new Request("https://frontend.example/api/auth/logout", { method: "POST", headers: { Origin: "https://frontend.example" } });
 
 describe("logout route", () => {
   const fetchMock = vi.fn<typeof fetch>();
@@ -27,7 +28,7 @@ describe("logout route", () => {
     vi.stubEnv("SESSION_COOKIE_NAME", "monzo_session");
     vi.stubEnv("NODE_ENV", "production");
 
-    const response = await POST();
+    const response = await POST(sameOriginRequest());
     const setCookie = response.headers.get("set-cookie");
 
     expect(response.status).toBe(204);
@@ -58,7 +59,7 @@ describe("logout route", () => {
   it("clears cookies without contacting the backend when already signed out", async () => {
     cookieGet.mockReturnValue(undefined);
 
-    const response = await POST();
+    const response = await POST(sameOriginRequest());
 
     expect(response.status).toBe(204);
     expect(response.headers.get("set-cookie")).toContain("Max-Age=0");
@@ -68,40 +69,40 @@ describe("logout route", () => {
   it("rejects a session without a valid user ID", async () => {
     cookieGet.mockReturnValue({ value: "invalid-token" });
 
-    const response = await POST();
+    const response = await POST(sameOriginRequest());
 
     expect(response.status).toBe(401);
     expect(fetchMock).not.toHaveBeenCalled();
-    expect(response.headers.get("set-cookie")).toBeNull();
+    expect(response.headers.get("set-cookie")).toContain("Max-Age=0");
   });
 
   it("reports missing backend configuration", async () => {
     vi.stubEnv("BASE_URL", "");
 
-    const response = await POST();
+    const response = await POST(sameOriginRequest());
 
     expect(response.status).toBe(500);
     expect(fetchMock).not.toHaveBeenCalled();
-    expect(response.headers.get("set-cookie")).toBeNull();
+    expect(response.headers.get("set-cookie")).toContain("Max-Age=0");
   });
 
-  it.each([401, 403, 500])("preserves cookies when the backend returns %s", async (status) => {
+  it.each([401, 403, 500])("clears local cookies when the backend returns %s", async (status) => {
     fetchMock.mockResolvedValue(new Response("private backend error", { status }));
 
-    const response = await POST();
+    const response = await POST(sameOriginRequest());
 
     expect(response.status).toBe(status < 500 ? status : 502);
     expect(await response.json()).toEqual({ source: "backend", error: "logout_failed" });
-    expect(response.headers.get("set-cookie")).toBeNull();
+    expect(response.headers.get("set-cookie")).toContain("Max-Age=0");
   });
 
-  it("preserves cookies when the backend is unavailable", async () => {
+  it("clears local cookies when the backend is unavailable", async () => {
     fetchMock.mockRejectedValue(new Error("Unavailable"));
 
-    const response = await POST();
+    const response = await POST(sameOriginRequest());
 
     expect(response.status).toBe(502);
     expect(await response.json()).toEqual({ source: "backend", error: "logout_unavailable" });
-    expect(response.headers.get("set-cookie")).toBeNull();
+    expect(response.headers.get("set-cookie")).toContain("Max-Age=0");
   });
 });

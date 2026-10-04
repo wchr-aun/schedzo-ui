@@ -41,7 +41,7 @@ describe("LogoutButton", () => {
     expect(screen.getByText("Logged out.")).toHaveAttribute("role", "status");
   });
 
-  it("keeps cached data and reports an error when logout fails", async () => {
+  it("clears cached data and reports an error when logout fails", async () => {
     const cache = new Map();
     cache.set("/api/accounts", { data: [{ id: "acc_123" }] });
     fetchMock.mockResolvedValue(new Response(null, { status: 500 }));
@@ -57,8 +57,8 @@ describe("LogoutButton", () => {
     expect(
       await screen.findByRole("alert", { name: "" }),
     ).toHaveTextContent("Backend error: Could not log out. Please try again.");
-    expect(cache.size).toBe(1);
-    expect(refresh).not.toHaveBeenCalled();
+    expect(cache.size).toBe(0);
+    expect(refresh).toHaveBeenCalledOnce();
     expect(screen.getByRole("button", { name: "Log out" })).toBeEnabled();
   });
 });

@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 
 import { isBalance } from "@/lib/accounts/validation";
 import { fetchAuthenticatedBackend } from "@/lib/auth/backend-fetch.server";
+import { getBackendBaseUrl } from "@/lib/auth/backend-fetch.server";
 
 type RouteContext = {
   params: Promise<{ accountId: string }>;
@@ -24,7 +25,7 @@ export async function GET(_request: Request, context: RouteContext) {
     return apiError({ error: "not_authenticated" }, { status: 401 });
   }
 
-  const baseUrl = process.env.BASE_URL?.replace(/\/+$/, "");
+  const baseUrl = getBackendBaseUrl();
 
   if (!baseUrl) {
     return apiError(

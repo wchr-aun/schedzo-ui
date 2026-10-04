@@ -1,8 +1,9 @@
 import { apiError } from "@/lib/errors/api-error.server";
+import { getBackendBaseUrl } from "@/lib/auth/backend-fetch.server";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
-  const baseUrl = process.env.BASE_URL?.replace(/\/+$/, "");
+  const baseUrl = getBackendBaseUrl();
 
   if (!baseUrl) {
     return apiError(
@@ -28,7 +29,10 @@ export async function GET(request: Request) {
     }
 
     const redirectUrl = new URL(location, `${baseUrl}/`);
-    if (redirectUrl.protocol !== "https:" && redirectUrl.protocol !== "http:") {
+    const localDevelopmentRedirect = process.env.NODE_ENV !== "production" &&
+      redirectUrl.protocol === "http:" &&
+      ["localhost", "127.0.0.1", "[::1]"].includes(redirectUrl.hostname);
+    if (redirectUrl.protocol !== "https:" && !localDevelopmentRedirect) {
       return apiError(
         { error: "invalid_login_redirect" },
         { status: 502 },

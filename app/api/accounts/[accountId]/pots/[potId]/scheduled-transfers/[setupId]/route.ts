@@ -1,7 +1,8 @@
 import { apiError } from "@/lib/errors/api-error.server";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { fetchAuthenticatedBackend } from "@/lib/auth/backend-fetch.server";
+import { fetchAuthenticatedBackend, getBackendBaseUrl } from "@/lib/auth/backend-fetch.server";
+import { isSameOriginMutation } from "@/lib/auth/csrf.server";
 
 type RouteContext = {
   params: Promise<{
@@ -11,7 +12,11 @@ type RouteContext = {
   }>;
 };
 
-export async function DELETE(_request: Request, context: RouteContext) {
+export async function DELETE(request: Request, context: RouteContext) {
+  if (!isSameOriginMutation(request)) {
+    return apiError({ error: "cross_origin_request_rejected" }, { status: 403 });
+  }
+
   const { accountId, potId, setupId } = await context.params;
 
   if (!accountId.trim() || !potId.trim() || !setupId.trim()) {
@@ -29,7 +34,7 @@ export async function DELETE(_request: Request, context: RouteContext) {
     return apiError({ error: "not_authenticated" }, { status: 401 });
   }
 
-  const baseUrl = process.env.BASE_URL?.replace(/\/+$/, "");
+  const baseUrl = getBackendBaseUrl();
 
   if (!baseUrl) {
     return apiError(

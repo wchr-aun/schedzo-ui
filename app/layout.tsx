@@ -3,6 +3,7 @@ import type {Metadata} from "next";
 import type {ReactNode} from "react";
 import "./globals.css";
 import {ToastProvider} from "@/components/providers/toast-provider/toast-provider";
+import { headers } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Schedzo - On schedule.",
@@ -25,13 +26,14 @@ const themeInitializationScript = `
   }
 `;
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: ReactNode }>) {
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitializationScript }} />
+        <script nonce={nonce} dangerouslySetInnerHTML={{ __html: themeInitializationScript }} />
       </head>
       <body><ToastProvider>{children}</ToastProvider></body>
     </html>

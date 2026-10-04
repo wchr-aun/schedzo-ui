@@ -8,7 +8,8 @@ import {
   type ScheduledTransferStatus,
 } from "@/lib/scheduled-transfers/types";
 import { isScheduledTransfer } from "@/lib/scheduled-transfers/validation";
-import { fetchAuthenticatedBackend } from "@/lib/auth/backend-fetch.server";
+import { fetchAuthenticatedBackend, getBackendBaseUrl } from "@/lib/auth/backend-fetch.server";
+import { isSameOriginMutation } from "@/lib/auth/csrf.server";
 
 type ScheduledTransfersResponse = {
   items: ScheduledTransfer[];
@@ -32,6 +33,7 @@ type ScheduleTransferRequest = {
 
 const transferIntervals = ["daily", "weekly", "monthly"] as const;
 const transferTypes = ["deposit", "withdraw"] as const;
+const MAX_SCHEDULE_REQUEST_BYTES = 16 * 1024;
 
 const scheduleTransferKeys = [
   "datetime",
@@ -170,6 +172,7 @@ function isScheduleTransferRequest(
     "datetime" in value &&
     typeof value.datetime === "string" &&
     isUkDateTime(value.datetime) &&
+    new Date(value.datetime).getTime() > Date.now() &&
     "interval" in value &&
     typeof value.interval === "string" &&
     transferIntervals.includes(
@@ -191,6 +194,46 @@ function isScheduleTransferRequest(
   );
 }
 
+async function readScheduleRequest(request: Request): Promise<{ payload?: unknown; error?: string; status?: number }> {
+  const contentType = request.headers.get("content-type")?.split(";", 1)[0].trim().toLowerCase();
+  if (contentType !== "application/json") return { error: "json_content_type_required", status: 415 };
+
+  const contentLength = request.headers.get("content-length");
+  if (contentLength !== null) {
+    if (!/^\d+$/.test(contentLength)) return { error: "invalid_request", status: 400 };
+    if (Number(contentLength) > MAX_SCHEDULE_REQUEST_BYTES) {
+      return { error: "request_too_large", status: 413 };
+    }
+  }
+
+  if (!request.body) return { error: "invalid_request", status: 400 };
+
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      size += value.byteLength;
+      if (size > MAX_SCHEDULE_REQUEST_BYTES) {
+        await reader.cancel();
+        return { error: "request_too_large", status: 413 };
+      }
+      chunks.push(value);
+    }
+    const body = new Uint8Array(size);
+    let offset = 0;
+    for (const chunk of chunks) {
+      body.set(chunk, offset);
+      offset += chunk.byteLength;
+    }
+    return { payload: JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(body)) as unknown };
+  } catch {
+    return { error: "invalid_request", status: 400 };
+  }
+}
+
 function toScheduledTransfer(value: ScheduledTransfer): ScheduledTransfer {
   return {
     setup_id: value.setup_id,
@@ -209,7 +252,7 @@ async function getBackendDetails() {
   const cookieStore = await cookies();
   const sessionCookieName = process.env.SESSION_COOKIE_NAME ?? "session";
   const token = cookieStore.get(sessionCookieName)?.value;
-  const baseUrl = process.env.BASE_URL?.replace(/\/+$/, "");
+  const baseUrl = getBackendBaseUrl();
 
   return { token, baseUrl };
 }
@@ -299,6 +342,10 @@ export async function GET(request: Request, context: RouteContext) {
 }
 
 export async function POST(request: Request, context: RouteContext) {
+  if (!isSameOriginMutation(request)) {
+    return apiError({ error: "cross_origin_request_rejected" }, { status: 403 });
+  }
+
   const { accountId, potId } = await context.params;
 
   if (!accountId.trim() || !potId.trim()) {
@@ -306,22 +353,6 @@ export async function POST(request: Request, context: RouteContext) {
       { error: "account_and_pot_ids_required" },
       { status: 400 },
     );
-  }
-
-  let payload: unknown;
-
-  try {
-    payload = await request.json();
-  } catch {
-    return apiError({ error: "invalid_request" }, { status: 400 });
-  }
-
-  if (
-    !isScheduleTransferRequest(payload) ||
-    payload.account_id !== accountId ||
-    payload.pot_id !== potId
-  ) {
-    return apiError({ error: "invalid_request" }, { status: 400 });
   }
 
   const { token, baseUrl } = await getBackendDetails();
@@ -335,6 +366,18 @@ export async function POST(request: Request, context: RouteContext) {
       { error: "authentication_not_configured" },
       { status: 500 },
     );
+  }
+
+  const parsed = await readScheduleRequest(request);
+  if (parsed.error) return apiError({ error: parsed.error }, { status: parsed.status! });
+  const payload = parsed.payload;
+
+  if (
+    !isScheduleTransferRequest(payload) ||
+    payload.account_id !== accountId ||
+    payload.pot_id !== potId
+  ) {
+    return apiError({ error: "invalid_request" }, { status: 400 });
   }
 
   try {

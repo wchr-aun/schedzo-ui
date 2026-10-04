@@ -1,6 +1,7 @@
 import { apiError } from "@/lib/errors/api-error.server";
 import { NextRequest, NextResponse } from "next/server";
 import { REFRESH_TOKEN_COOKIE_NAME } from "@/lib/auth/cookie-names";
+import { getBackendBaseUrl } from "@/lib/auth/backend-fetch.server";
 
 type CallbackResponse = {
   token?: unknown;
@@ -29,7 +30,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const baseUrl = process.env.BASE_URL?.replace(/\/+$/, "");
+  const baseUrl = getBackendBaseUrl();
 
   if (!baseUrl) {
     return apiError(
@@ -49,6 +50,7 @@ export async function GET(request: NextRequest) {
         Cookie: `monzo_oauth_state=${oauthStateCookie}`,
       },
       cache: "no-store",
+      redirect: "error",
       signal: AbortSignal.timeout(15_000),
     });
 
