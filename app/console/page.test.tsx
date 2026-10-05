@@ -15,9 +15,6 @@ vi.mock("@/lib/auth/session.server", () => ({
 vi.mock("@/components/accounts/accounts-list/accounts-list", () => ({
   AccountsList: ({ userId }: { userId: string }) => <p>Accounts for {userId}</p>,
 }));
-vi.mock("@/components/auth/logout-button/logout-button", () => ({
-  LogoutButton: () => <button>Log out</button>,
-}));
 
 describe("ConsolePage", () => {
   afterEach(() => vi.unstubAllEnvs());
@@ -45,7 +42,6 @@ describe("ConsolePage", () => {
 
     expect(getCookie).toHaveBeenCalledWith("custom-session");
     expect(screen.getByText("Accounts for user_123")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Log out" })).toBeInTheDocument();
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });
 });

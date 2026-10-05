@@ -230,6 +230,7 @@ describe("scheduled transfers route", () => {
 
     expect(response.status).toBe(201);
     expect(await response.json()).toEqual(createdTransfer);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(fetchMock).toHaveBeenCalledWith(
       "https://backend.example/schedule-transfer",
       expect.objectContaining({

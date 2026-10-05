@@ -1,0 +1,118 @@
+.menu {
+  position: relative;
+}
+
+.menu summary {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  color: var(--color-navbar-control-text);
+  background: transparent;
+  cursor: pointer;
+  list-style: none;
+}
+
+.menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.menu summary:focus-visible {
+  outline: 3px solid var(--color-focus-navbar);
+  outline-offset: 2px;
+}
+
+.menu summary svg {
+  width: 4px;
+  height: 20px;
+}
+
+.panel {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  display: grid;
+  width: max-content;
+  min-width: 160px;
+  max-width: calc(100vw - 24px);
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border: 1px solid color-mix(in srgb, var(--color-border) 75%, transparent);
+  border-radius: var(--radius-action);
+  background: var(--color-surface);
+  box-shadow: 0 12px 28px rgb(0 0 0 / 22%);
+  transform-origin: var(--menu-caret-left, 20px) -8px;
+  visibility: hidden;
+}
+
+.panel::before {
+  position: absolute;
+  top: -7px;
+  left: calc(var(--menu-caret-left, 20px) - 6px);
+  width: 12px;
+  height: 12px;
+  border-top: 1px solid color-mix(in srgb, var(--color-border) 75%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--color-border) 75%, transparent);
+  background: var(--color-surface);
+  content: "";
+  transform: rotate(45deg);
+}
+
+.menu[open] .panel {
+  animation: menu-enter 120ms ease-out;
+}
+
+.divider {
+  width: auto;
+  height: 0;
+  margin: 0 var(--space-2);
+  border: 0;
+  border-top: 1px solid var(--color-border);
+}
+
+button.option.option {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  min-height: 36px;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  color: var(--color-danger);
+  background: transparent;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+}
+
+button.option.option:hover:not(:disabled) {
+  color: var(--color-danger);
+  background: color-mix(in srgb, var(--color-danger) 9%, transparent);
+}
+
+button.option.option:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: -2px;
+}
+
+@keyframes menu-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu[open] .panel {
+    animation: none;
+  }
+}

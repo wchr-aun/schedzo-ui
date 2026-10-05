@@ -3,13 +3,18 @@ import {MoneyVisibilityToggle} from "@/components/ui/money-visibility-toggle/mon
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./navbar.module.css";
+import { AccountOptionsMenu } from "@/components/layout/navbar/account-options-menu/account-options-menu";
 
 export function Navbar({
   logoHref = "/console",
   demoMode = false,
+  isLoggedIn = false,
+  onLogout,
 }: {
   logoHref?: string;
   demoMode?: boolean;
+  isLoggedIn?: boolean;
+  onLogout?: () => void;
 }) {
   return (
     <nav className={styles.navbar} aria-label="Site controls">
@@ -35,6 +40,9 @@ export function Navbar({
         <div className={styles.controls}>
           <MoneyVisibilityToggle />
           <ThemeToggle />
+          {isLoggedIn ? (
+            <AccountOptionsMenu onLogout={onLogout} showDisconnect={!demoMode} />
+          ) : null}
           {demoMode ? (
               <Link
                   className={styles.exitDemoLink}

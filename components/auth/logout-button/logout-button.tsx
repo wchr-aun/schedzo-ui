@@ -6,9 +6,8 @@ import {useToast} from "@/components/providers/toast-provider/toast-provider";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
 import {useSWRConfig} from "swr";
-import styles from "./logout-button.module.css";
 
-export function LogoutButton({ onLogout }: { onLogout?: () => void }) {
+export function LogoutButton({ onLogout, className }: { onLogout?: () => void; className?: string }) {
   const router = useRouter();
   const { cache, mutate } = useSWRConfig();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -41,16 +40,15 @@ export function LogoutButton({ onLogout }: { onLogout?: () => void }) {
   }
 
   return (
-    <div className={styles.control}>
-      <Button
-        className={styles.button}
-        variant="danger"
-        type="button"
-        disabled={isLoggingOut}
-        onClick={() => void logout()}
-      >
-        {isLoggingOut ? "Logging out…" : "Log out"}
-      </Button>
-    </div>
+    <Button
+      className={className}
+      variant="danger"
+      type="button"
+      aria-label={isLoggingOut ? "Logging out…" : "Log out"}
+      disabled={isLoggingOut}
+      onClick={() => void logout()}
+    >
+      {isLoggingOut ? "Logging out…" : "Log out"}
+    </Button>
   );
 }
