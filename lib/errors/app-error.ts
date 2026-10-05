@@ -1,5 +1,5 @@
 export type ErrorSource = "frontend" | "backend" | "connection";
-export type ErrorOperation = "load accounts" | "load the balance" | "load pots" | "load scheduled transfers" | "create the scheduled transfer" | "cancel the scheduled transfer" | "log out" | "start login" | "complete login" | "display this page" | "restore browser preferences" | "save browser preferences";
+export type ErrorOperation = "load accounts" | "load the balance" | "load pots" | "load scheduled transfers" | "create the scheduled transfer" | "cancel the scheduled transfer" | "log out" | "revoke access" | "start login" | "complete login" | "display this page" | "restore browser preferences" | "save browser preferences";
 
 export class AppError extends Error {
   constructor(

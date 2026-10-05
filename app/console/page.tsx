@@ -1,5 +1,4 @@
 import {LoginButton} from "@/components/auth/login-button/login-button";
-import {LogoutButton} from "@/components/auth/logout-button/logout-button";
 import {AccountsList} from "@/components/accounts/accounts-list/accounts-list";
 import {PageContainer} from "@/components/layout/page-container/page-container";
 import {getUserId} from "@/lib/auth/session.server";
@@ -19,7 +18,6 @@ export default async function ConsolePage() {
       {isLoggedIn ? (
         <div className={styles.loggedInContent}>
           <AccountsList userId={userId} />
-          <LogoutButton />
         </div>
       ) : !loginUrl ? (
         <p className={styles.status}>Login is not configured.</p>

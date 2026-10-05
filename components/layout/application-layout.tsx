@@ -13,8 +13,8 @@ export async function ApplicationLayout({ children }: { children: ReactNode }) {
 
   return (
     <MoneyVisibilityProvider>
-      <Navbar />
       <DataProvider>
+        <Navbar isLoggedIn={isLoggedIn} />
         {isLoggedIn ? <AccountsPreloader /> : null}
         {children}
       </DataProvider>
