@@ -24,6 +24,7 @@ accounts and pots, and managing scheduled transfers.
 | Route | Purpose |
 | --- | --- |
 | `/` | Project landing page with a pot preview, story, features, and open-source links, and console access |
+| `/schedule-monzo-savings-pot-withdrawals` | Guide to Savings Pot withdrawal options, Schedzo, safety, and current limitations |
 | `/console` | Login when signed out; user identity, account list, balances, and logout when signed in |
 | `/demo` | Interactive console demo with simulated login and sample data |
 | `/demo/account/[accountId]` | Browse sample balances and pots |
@@ -43,10 +44,9 @@ from an isolated SWR cache. Revalidation is disabled, so it makes no authenticat
 account requests. The preview is inert, with disabled
 controls and a not-allowed cursor. The landing page explains the motivation,
 illustrates a pot withdrawal followed by a payment scheduled in Monzo,
-shows three features and example Monzo notifications, and links to both public
-repositories. The hero's Curious how it works? Explore the code text links to
-the on-page open-source section. Its Try the demo button scrolls to a demo section below
-open source, where the Open demo button opens `/demo` in a new tab. Scroll reveals animate
+shows three features and example Monzo notifications, links to the Savings Pot
+withdrawal guide and both public repositories, and finishes with the join CTA.
+Its demo section links to `/demo`. Scroll reveals animate
 this section; reaching the bottom of the page reveals any remaining hidden
 content, including the demo button.
 Landing page copy is editable in `components/landing/landing-page/landing-page.tsx`.

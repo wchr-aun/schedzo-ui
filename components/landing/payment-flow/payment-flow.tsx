@@ -9,7 +9,7 @@ import {MonzoTransaction} from "@/components/landing/monzo-transaction/monzo-tra
 import revealStyles from "@/components/ui/scroll-reveal/scroll-reveal.module.css";
 import styles from "./payment-flow.module.css";
 
-export function PaymentFlow({transfer}: {transfer: ScheduledTransfer}) {
+export function PaymentFlow({transfer, animated = true}: {transfer: ScheduledTransfer; animated?: boolean}) {
   const {ref, entered, reducedMotion, hidden} = useScrollReveal<HTMLElement>();
   const [step, setStep] = useState(1);
   const [started, setStarted] = useState(false);
@@ -19,15 +19,15 @@ export function PaymentFlow({transfer}: {transfer: ScheduledTransfer}) {
   const stepsId = useId();
 
   useEffect(() => {
-    if (entered && !started) {
+    if (animated && entered && !started) {
       setStarted(true);
       setScheduledFor(new Date().toISOString());
       setStep(reducedMotion ? 3 : 1);
     }
-  }, [entered, started, reducedMotion]);
+  }, [animated, entered, started, reducedMotion]);
 
   useEffect(() => {
-    if (!started || step === 3) return;
+    if (!animated || !started || step === 3) return;
     if (reducedMotion) return;
     const countdown = window.setInterval(() => setSecondsRemaining(current => Math.max(0, current - 1)), 1_000);
     const timer = window.setTimeout(() => {
@@ -39,7 +39,7 @@ export function PaymentFlow({transfer}: {transfer: ScheduledTransfer}) {
       window.clearInterval(countdown);
       window.clearTimeout(timer);
     };
-  }, [started, step, playback, reducedMotion]);
+  }, [animated, started, step, playback, reducedMotion]);
 
   function replay(fromStep: number) {
     setStarted(true);
@@ -49,11 +49,12 @@ export function PaymentFlow({transfer}: {transfer: ScheduledTransfer}) {
     setScheduledFor(new Date().toISOString());
   }
 
+  const visibleStep = animated ? step : 3;
   const previewTransfer: ScheduledTransfer = {
     ...transfer,
     scheduled_for: scheduledFor,
-    status: step === 1 ? "pending" : "completed",
-    executed_at: step === 1 ? null : scheduledFor,
+    status: visibleStep === 1 ? "pending" : "completed",
+    executed_at: visibleStep === 1 ? null : scheduledFor,
   };
 
   function explanation(forStep: number) {
@@ -74,9 +75,9 @@ export function PaymentFlow({transfer}: {transfer: ScheduledTransfer}) {
   }
 
   return (
-    <figure ref={ref} className={`${styles.flow} ${revealStyles.reveal}`} data-hidden={hidden} data-entered={entered}
+    <figure ref={animated ? ref : undefined} className={animated ? `${styles.flow} ${revealStyles.reveal}` : styles.flow} data-hidden={animated ? hidden : undefined} data-entered={animated ? entered : undefined} data-static={!animated || undefined}
       aria-label="Example of a pot withdrawal followed by a payment scheduled in Monzo">
-      <div className={styles.player}>
+      <div className={styles.player} data-static={!animated || undefined}>
         <ol id={stepsId} className={styles.steps}>
           <li>
             <p className={styles.stepLabel}>Schedzo · Pot withdrawal</p>
@@ -85,22 +86,22 @@ export function PaymentFlow({transfer}: {transfer: ScheduledTransfer}) {
                 <ScheduledTransferCard transfer={previewTransfer} cancelling={false} onCancel={() => undefined} />
               </ul>
             </fieldset>
-            {explanation(1)}
-            {step >= 2 ? <div className={styles.arrow} aria-hidden="true"><ArrowIcon direction="down" /></div> : null}
+            {animated ? explanation(1) : null}
+            {visibleStep >= 2 ? <div className={styles.arrow} aria-hidden="true"><ArrowIcon direction="down" /></div> : null}
           </li>
-          {step >= 2 ? <li>
+          {visibleStep >= 2 ? <li>
             <p className={styles.stepLabel}>Schedzo · Transfer update</p>
-            <MonzoTransaction key={`transfer-${playback}`} revealTrigger="mount" kind="transfer" amount={transfer.amount} potName="Rainy day" />
-            {explanation(2)}
-            {step >= 3 ? <div className={styles.arrow} aria-hidden="true"><ArrowIcon direction="down" /></div> : null}
+            <MonzoTransaction key={`transfer-${playback}`} revealTrigger="mount" animate={animated} kind="transfer" amount={transfer.amount} potName="Rainy day" />
+            {animated ? explanation(2) : null}
+            {visibleStep >= 3 ? <div className={styles.arrow} aria-hidden="true"><ArrowIcon direction="down" /></div> : null}
           </li> : null}
-          {step >= 3 ? <li>
+          {visibleStep >= 3 ? <li>
             <p className={styles.stepLabel}>Monzo · Scheduled payment</p>
-            <MonzoTransaction key={`payment-${playback}`} revealTrigger="mount" kind="payment" amount={transfer.amount} recipient="Landlord" initials="L" reference="Rent" />
-            {explanation(3)}
+            <MonzoTransaction key={`payment-${playback}`} revealTrigger="mount" animate={animated} kind="payment" amount={transfer.amount} recipient="Landlord" initials="L" reference="Rent" />
+            {animated ? explanation(3) : null}
           </li> : null}
         </ol>
-        <div className={styles.controls} role="group" aria-label="Replay payment flow">
+        {animated ? <div className={styles.controls} role="group" aria-label="Replay payment flow">
           {["Withdrawal due soon", "Transfer completed", "Rent sent to landlord"].map((label, index) => (
             <button key={label} type="button" aria-label={`Replay step ${index + 1}: ${label}`}
               aria-pressed={step === index + 1} aria-controls={stepsId}
@@ -108,9 +109,9 @@ export function PaymentFlow({transfer}: {transfer: ScheduledTransfer}) {
               {index + 1}
             </button>
           ))}
-        </div>
+        </div> : null}
       </div>
-      {step >= 3 ? <figcaption>One less thing to remember.</figcaption> : null}
+      {visibleStep >= 3 ? <figcaption>{animated ? "One less thing to remember." : "Savings Pot withdrawal followed by a scheduled Monzo payment."}</figcaption> : null}
     </figure>
   );
 }

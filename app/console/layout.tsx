@@ -2,8 +2,8 @@ import type {Metadata} from "next";
 
 export const metadata: Metadata = {
     title: {
-        default: "Schedzo Console - Home",
-        template: "Schedzo Console - %s",
+        default: "Home – Schedzo Console",
+        template: "%s – Schedzo Console",
     },
     description:
         "Connect your Monzo account to Schedzo, view your accounts and balances, and manage scheduled transfers into and out of your pots.",

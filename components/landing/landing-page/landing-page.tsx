@@ -7,7 +7,6 @@ import {ThemeToggle} from "@/components/ui/theme-toggle/theme-toggle";
 import {Footer} from "@/components/layout/footer/footer";
 import {PotPreview} from "@/components/landing/pot-preview/pot-preview";
 import {MonzoNotification} from "@/components/landing/monzo-notification/monzo-notification";
-import {InterestCalculation} from "@/components/landing/interest-calculation/interest-calculation";
 import {MonzoTransaction} from "@/components/landing/monzo-transaction/monzo-transaction";
 import {PaymentFlow} from "@/components/landing/payment-flow/payment-flow";
 import {RepositoryCard} from "@/components/landing/repository-card/repository-card";
@@ -48,11 +47,12 @@ export function LandingPage() {
       <main id="main">
         <section className={styles.hero} aria-labelledby="hero-heading">
           <ScrollReveal className={styles.heroCopy}>
-            <p className={styles.eyebrow}><span className={styles.dot} /> Schedzo. On schedule.</p>
-            <h1 id="hero-heading">Less remembering.<br /><span>More saving.</span></h1>
+            <p className={`${styles.eyebrow} ${styles.heroEyebrow}`}>
+              <span className={styles.dot} /> Less remembering. <span>More saving.</span>
+            </p>
+            <h1 id="hero-heading">Schedule your Monzo Pot transfers.</h1>
             <p className={styles.introduction}>
-              Schedule money into and out of your Monzo pots, so there&apos;s one less
-              thing to remember when life gets busy.
+              Automatically schedule money into and out of your Monzo Pots, including withdrawals from Savings Pots.
             </p>
             <p className={styles.invitation}>
               Free to join. Get in touch and I&apos;ll help you get set up.
@@ -78,32 +78,13 @@ export function LandingPage() {
             <ScrollReveal>
               <h3>The problem.</h3>
               <p>
-                Monzo doesn&apos;t let us <strong>schedule withdrawals from savings pots</strong>. So, if we
-                want to keep money earning interest until a scheduled payment is due, we have
-                to remember to manually move it into the main balance ourselves.
-              </p>
-              <p>
-                If payday is on the 28th and rent is due on the 15th of the following month,
-                that&apos;s <strong>over two weeks of interest</strong> we could earn on the rent money.
-              </p>
-              <p>
-                Using <strong>£{exampleRentAmount.toLocaleString("en-GB")}</strong>, the <ExternalLink href="https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/privaterentandhousepricesuk/march2026#private-rents-by-english-region">average monthly private rent in London in February 2026 according to the ONS</ExternalLink>,
-                keeping that money in a savings pot for 17 days at 2.75% AER could earn roughly <InterestCalculation />. Do that each month and
-                it&apos;s around <strong className={styles.interestHighlight}>£34 over a year</strong>. It&apos;s a small amount each time, but it adds
-                up without having to put any extra money aside!
-              </p>
-              <p className={styles.rateNote}>
-                Illustrative calculation using <ExternalLink href="https://monzo.com/current-account">Monzo&apos;s Instant Access Savings rate</ExternalLink> of
-                2.75% AER variable on the free plan, checked on 2 October 2026. Rates can change.
+                Imagine payday is on the 28th and rent is due on the 15th. You could leave the rent money in a Savings Pot in the meantime, where it can keep earning interest. But Monzo doesn&apos;t let you schedule a recurring withdrawal from a Savings Pot for just before rent is due.
               </p>
             </ScrollReveal>
             <ScrollReveal>
               <h3>The workaround.</h3>
               <p>
-                The workaround is to schedule the payment from the main balance, then
-                <strong> manually withdraw the money from the savings pot the day before</strong>.
-                But life can sometimes be quite busy. Even with Monzo&apos;s reminder that
-                there isn&apos;t enough money for the payment, <strong>it&apos;s easy to forget</strong>.
+                You can schedule rent from your main balance, then move the money from your Savings Pot into that balance yourself beforehand. It works, but you have to remember to do it at the right time.
               </p>
               <figure className={styles.declinedPreview}>
                 <ScrollReveal>
@@ -111,23 +92,21 @@ export function LandingPage() {
                   <figcaption>Example of a declined scheduled payment.</figcaption>
                 </ScrollReveal>
               </figure>
-              <p>
-                I wanted to <strong>automate that last step</strong>, so the money can stay in
-                the savings pot until it&apos;s needed, <strong>without me having to remember
-                to move it myself</strong>.
-              </p>
             </ScrollReveal>
             <ScrollReveal>
               <h3>Why build my own?</h3>
               <p>
-                There&apos;s already a platform that can do this: <ExternalLink href="https://ifttt.com/applets/d3xg75n8-move-money-daily-from-a-monzo-pot-to-your-account">IFTTT</ExternalLink> lets
-                us schedule withdrawals from pots to the main balance. But its free tier only
-                allows <strong>two automations</strong>. So, I decided to build this to serve my needs.
+                <ExternalLink href="https://ifttt.com/monzo">IFTTT</ExternalLink> can automate some Monzo actions. I wanted to build a small, open-source tool focused on scheduled Pot transfers, including Savings Pot withdrawals.
               </p>
               <p>
                 I also wanted <strong>a small project to play around with APIs in UK banking</strong>.
                 Monzo already provides <ExternalLink href="https://docs.monzo.com">APIs to move money into and out of pots</ExternalLink>,
                 so this felt like a good place to start.
+              </p>
+            </ScrollReveal>
+            <ScrollReveal>
+              <p>
+                Want to understand the options? <a href="/schedule-monzo-savings-pot-withdrawals">Read how to schedule withdrawals from Monzo Savings Pots.</a>
               </p>
             </ScrollReveal>
           </div>
@@ -182,36 +161,9 @@ export function LandingPage() {
           </div>
         </section>
 
-        <section id="join" className={styles.joinSection} aria-labelledby="join-heading">
-          <ScrollReveal>
-            <p className={styles.eyebrow}>03 / Join us</p>
-            <h2 id="join-heading">You&apos;re welcome to join.</h2>
-            <p className={styles.joinDescription}>
-              It&apos;s free to join, and you can use Schedzo right here with your own Monzo account —
-              no need to host anything yourself.
-              It&apos;s a small personal project with room for a few people, so drop me a message
-              if you&apos;d like to give it a go.
-            </p>
-            <p className={styles.joinDescription}>
-              To help you get set up, I&apos;ll need your Monzo user ID. You can find it by signing in
-              to the <ExternalLink href="https://developers.monzo.com/" aria-label="Monzo developer portal (opens in a new tab)">Monzo developer portal</ExternalLink>.
-              Please include it in your email.
-            </p>
-          </ScrollReveal>
-          <ScrollReveal className={styles.joinActions}>
-            <a className={styles.primaryLink} href="mailto:join@schedzo.app">Say hello <EmailIcon /></a>
-            <p className={styles.joinEmail}>
-              Or copy: <CopyableContent value="join@schedzo.app">join@schedzo.app</CopyableContent>
-            </p>
-            <p className={styles.joinNote}>
-              Already have access? <a href="/console">Go to console.</a>
-            </p>
-          </ScrollReveal>
-        </section>
-
         <section id="demo" className={styles.demoSection} aria-labelledby="demo-heading">
           <ScrollReveal>
-            <p className={styles.eyebrow}>04 / Interactive demo</p>
+            <p className={styles.eyebrow}>03 / Interactive demo</p>
             <h2 id="demo-heading">Take a look around.</h2>
             <p className={styles.demoDescription}>
               Explore sample accounts and pots, create a schedule, or cancel a transfer.
@@ -225,7 +177,7 @@ export function LandingPage() {
 
         <section id="code" className={styles.codeSection} aria-labelledby="code-heading">
           <ScrollReveal>
-            <p className={styles.eyebrow}>05 / Open source</p>
+            <p className={styles.eyebrow}>04 / Open source</p>
             <h2 id="code-heading">Prefer to host it yourself?</h2>
           </ScrollReveal>
           <ScrollReveal className={styles.codeDescription}>
@@ -253,6 +205,33 @@ export function LandingPage() {
               />
             </ScrollReveal>
           </div>
+        </section>
+
+        <section id="join" className={styles.joinSection} aria-labelledby="join-heading">
+          <ScrollReveal>
+            <p className={styles.eyebrow}>05 / Join us</p>
+            <h2 id="join-heading">You&apos;re welcome to join.</h2>
+            <p className={styles.joinDescription}>
+              It&apos;s free to join, and you can use Schedzo right here with your own Monzo account —
+              no need to host anything yourself.
+              It&apos;s a small personal project with room for a few people, so drop me a message
+              if you&apos;d like to give it a go.
+            </p>
+            <p className={styles.joinDescription}>
+              To help you get set up, I&apos;ll need your Monzo user ID. You can find it by signing in
+              to the <ExternalLink href="https://developers.monzo.com/" aria-label="Monzo developer portal (opens in a new tab)">Monzo developer portal</ExternalLink>.
+              Please include it in your email.
+            </p>
+          </ScrollReveal>
+          <ScrollReveal className={styles.joinActions}>
+            <a className={styles.primaryLink} href="mailto:join@schedzo.app">Say hello <EmailIcon /></a>
+            <p className={styles.joinEmail}>
+              Or copy: <CopyableContent value="join@schedzo.app">join@schedzo.app</CopyableContent>
+            </p>
+            <p className={styles.joinNote}>
+              Already have access? <a href="/console">Go to console.</a>
+            </p>
+          </ScrollReveal>
         </section>
       </main>
       <Footer />
