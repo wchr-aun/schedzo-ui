@@ -283,7 +283,8 @@
   line-height: 1.8;
 }
 
-.storyContent a {
+.storyContent a,
+.joinDescription a {
   color: var(--color-interactive);
 }
 

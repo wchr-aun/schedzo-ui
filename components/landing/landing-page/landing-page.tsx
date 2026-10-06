@@ -191,6 +191,11 @@ export function LandingPage() {
               It&apos;s a small personal project with room for a few people, so drop me a message
               if you&apos;d like to give it a go.
             </p>
+            <p className={styles.joinDescription}>
+              To help you get set up, I&apos;ll need your Monzo user ID. You can find it by signing in
+              to the <ExternalLink href="https://developers.monzo.com/" aria-label="Monzo developer portal (opens in a new tab)">Monzo developer portal</ExternalLink>.
+              Please include it in your email.
+            </p>
           </ScrollReveal>
           <ScrollReveal className={styles.joinActions}>
             <a className={styles.primaryLink} href="mailto:wchr.aun@gmail.com">Say hello <EmailIcon /></a>
