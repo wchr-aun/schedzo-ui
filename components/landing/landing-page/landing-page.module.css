@@ -127,6 +127,29 @@
   background: var(--color-primary-hover);
 }
 
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.secondaryLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 46px;
+  color: var(--color-interactive);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-underline-offset: 4px;
+}
+
+.secondaryLink:hover,
+.joinNote a:hover {
+  color: var(--color-interactive-hover);
+}
+
 .page a:focus-visible {
   outline: var(--focus-ring);
   outline-offset: 5px;
@@ -136,6 +159,7 @@
 .storySection,
 .buildSection,
 .codeSection,
+.joinSection,
 .demoSection {
   width: min(100% - 80px, 1160px);
   margin-inline: auto;
@@ -193,6 +217,14 @@
   color: var(--color-text-muted);
   font-size: 1.125rem;
   line-height: 1.75;
+}
+
+.invitation {
+  max-width: 390px;
+  margin: 0 0 var(--space-6);
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.8;
 }
 
 .heroNote {
@@ -406,6 +438,7 @@
   text-align: left;
 }
 
+.joinSection,
 .demoSection {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -415,10 +448,34 @@
   border-top: 1px solid var(--color-border);
 }
 
+.joinSection {
+  padding-block: 64px;
+}
+
+.joinActions {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: var(--space-4);
+}
+
+.joinNote {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  line-height: 1.8;
+}
+
+.joinNote a {
+  color: var(--color-interactive);
+  text-underline-offset: 3px;
+}
+
 .demoSection h2 {
   font-size: clamp(1.75rem, 3vw, 2.5rem);
 }
 
+.joinDescription,
 .demoDescription {
   max-width: 640px;
   margin: var(--space-4) 0 0;
@@ -445,6 +502,7 @@
   .storySection,
   .buildSection,
   .codeSection,
+  .joinSection,
   .demoSection { width: calc(100% - 40px); }
   .navigation { min-height: 76px; }
   .brand img { width: 44px; height: 44px; }
@@ -464,6 +522,7 @@
   .notificationFeature { grid-template-columns: 1fr; gap: var(--space-6); }
   .repositories { grid-template-columns: 1fr; }
   .codeSection { padding: 48px var(--space-5); margin-bottom: 48px; }
+  .joinSection,
   .demoSection { grid-template-columns: 1fr; padding-block: var(--space-8) 48px; }
 }
 

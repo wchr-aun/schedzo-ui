@@ -52,7 +52,13 @@ export function LandingPage() {
               Schedule money into and out of your Monzo pots, so there&apos;s one less
               thing to remember when life gets busy.
             </p>
-            <a className={styles.primaryLink} href="#demo">Try the demo <ArrowIcon /></a>
+            <p className={styles.invitation}>
+              Want to use Schedzo too? Join us — just get in touch and I&apos;ll help you get set up.
+            </p>
+            <div className={styles.heroActions}>
+              <a className={styles.primaryLink} href="#join">Join us <ArrowIcon /></a>
+              <a className={styles.secondaryLink} href="#demo">Try the demo <ArrowIcon /></a>
+            </div>
             <p className={styles.heroNote}>
               <a href="#code">Curious how it works? Explore the code.</a>
             </p>
@@ -177,10 +183,28 @@ export function LandingPage() {
           </div>
         </section>
 
+        <section id="join" className={styles.joinSection} aria-labelledby="join-heading">
+          <ScrollReveal>
+            <p className={styles.eyebrow}>03 / Join us</p>
+            <h2 id="join-heading">You&apos;re welcome to join.</h2>
+            <p className={styles.joinDescription}>
+              You can use Schedzo right here with your own Monzo account — no need to host anything yourself.
+              It&apos;s a small personal project with room for a few people, so drop me a message
+              if you&apos;d like to give it a go.
+            </p>
+          </ScrollReveal>
+          <ScrollReveal className={styles.joinActions}>
+            <a className={styles.primaryLink} href="mailto:wchr.aun@gmail.com">Say hello <ArrowIcon /></a>
+            <p className={styles.joinNote}>
+              Already have access? <a href="/console">Go to console.</a>
+            </p>
+          </ScrollReveal>
+        </section>
+
         <section id="demo" className={styles.demoSection} aria-labelledby="demo-heading">
           <ScrollReveal>
-            <p className={styles.eyebrow}>03 / Interactive demo</p>
-            <h2 id="demo-heading">Try it for yourself.</h2>
+            <p className={styles.eyebrow}>04 / Interactive demo</p>
+            <h2 id="demo-heading">Take a look around.</h2>
             <p className={styles.demoDescription}>
               Explore sample accounts and pots, create a schedule, or cancel a transfer.
               No Monzo account needed, and no real money moves.
@@ -193,15 +217,11 @@ export function LandingPage() {
 
         <section id="code" className={styles.codeSection} aria-labelledby="code-heading">
           <ScrollReveal>
-            <p className={styles.eyebrow}>04 / Open source</p>
-            <h2 id="code-heading">Built for my needs.<br />Open for yours.</h2>
+            <p className={styles.eyebrow}>05 / Open source</p>
+            <h2 id="code-heading">Prefer to host it yourself?</h2>
           </ScrollReveal>
           <ScrollReveal className={styles.codeDescription}>
-            <p>
-              Monzo&apos;s developer API is intended for personal projects and a small set of
-              explicitly allowed users, so I can only let a small number of people in.
-            </p>
-            <p>But all the code is open source. Feel free to fork it, copy it, and run it on your own server.</p>
+            <p>All the code is open source. Feel free to fork it, copy it, and run it on your own server.</p>
           </ScrollReveal>
           <div className={styles.repositories}>
             <ScrollReveal>
