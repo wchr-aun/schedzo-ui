@@ -58,7 +58,7 @@ export function LandingPage() {
             </p>
             <a className={styles.primaryLink} href="#join">Join us <ArrowIcon /></a>
             <p className={styles.heroNote}>
-              <a href="#demo">Try the demo</a>
+              Curious how it works? <a href="#demo">Try the demo</a>.
             </p>
           </ScrollReveal>
           <ScrollReveal delay={120}><PotPreview transfersPage={transfersPage} /></ScrollReveal>
