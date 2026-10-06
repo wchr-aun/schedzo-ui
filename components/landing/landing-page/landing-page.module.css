@@ -127,25 +127,18 @@
   background: var(--color-primary-hover);
 }
 
-.heroActions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-5);
+.heroNote {
+  margin: var(--space-4) 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
 }
 
-.secondaryLink {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  min-height: 46px;
+.heroNote a {
   color: var(--color-interactive);
-  font-size: 0.875rem;
-  font-weight: 700;
-  text-underline-offset: 4px;
+  text-underline-offset: 3px;
 }
 
-.secondaryLink:hover,
+.heroNote a:hover,
 .joinNote a:hover {
   color: var(--color-interactive-hover);
 }

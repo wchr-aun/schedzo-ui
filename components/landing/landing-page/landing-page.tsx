@@ -56,10 +56,10 @@ export function LandingPage() {
             <p className={styles.invitation}>
               Free to join. Get in touch and I&apos;ll help you get set up.
             </p>
-            <div className={styles.heroActions}>
-              <a className={styles.primaryLink} href="#join">Join us <ArrowIcon /></a>
-              <a className={styles.secondaryLink} href="#demo">Try the demo <ArrowIcon /></a>
-            </div>
+            <a className={styles.primaryLink} href="#join">Join us <ArrowIcon /></a>
+            <p className={styles.heroNote}>
+              <a href="#demo">Try the demo</a>
+            </p>
           </ScrollReveal>
           <ScrollReveal delay={120}><PotPreview transfersPage={transfersPage} /></ScrollReveal>
         </section>
