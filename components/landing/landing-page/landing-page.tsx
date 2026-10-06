@@ -1,6 +1,7 @@
 import {createPreviewTransfersPage} from "@/lib/scheduled-transfers/preview";
 import Image from "next/image";
 import {ArrowIcon} from "@/components/ui/icons/arrow-icon";
+import {EmailIcon} from "@/components/ui/icons/email-icon";
 import {ExternalLink} from "@/components/ui/external-link/external-link";
 import {ThemeToggle} from "@/components/ui/theme-toggle/theme-toggle";
 import {Footer} from "@/components/layout/footer/footer";
@@ -53,16 +54,12 @@ export function LandingPage() {
               thing to remember when life gets busy.
             </p>
             <p className={styles.invitation}>
-              Want to use Schedzo too? Join us — just get in touch and I&apos;ll help you get set up.
+              Free to join. Get in touch and I&apos;ll help you get set up.
             </p>
             <div className={styles.heroActions}>
               <a className={styles.primaryLink} href="#join">Join us <ArrowIcon /></a>
               <a className={styles.secondaryLink} href="#demo">Try the demo <ArrowIcon /></a>
             </div>
-            <p className={styles.heroNote}>
-              <a href="#code">Curious how it works? Explore the code.</a>
-            </p>
-            <a className={styles.storyLink} href="#why">A little about the project <ArrowIcon direction="down" /></a>
           </ScrollReveal>
           <ScrollReveal delay={120}><PotPreview transfersPage={transfersPage} /></ScrollReveal>
         </section>
@@ -188,13 +185,14 @@ export function LandingPage() {
             <p className={styles.eyebrow}>03 / Join us</p>
             <h2 id="join-heading">You&apos;re welcome to join.</h2>
             <p className={styles.joinDescription}>
-              You can use Schedzo right here with your own Monzo account — no need to host anything yourself.
+              It&apos;s free to join, and you can use Schedzo right here with your own Monzo account —
+              no need to host anything yourself.
               It&apos;s a small personal project with room for a few people, so drop me a message
               if you&apos;d like to give it a go.
             </p>
           </ScrollReveal>
           <ScrollReveal className={styles.joinActions}>
-            <a className={styles.primaryLink} href="mailto:wchr.aun@gmail.com">Say hello <ArrowIcon /></a>
+            <a className={styles.primaryLink} href="mailto:wchr.aun@gmail.com">Say hello <EmailIcon /></a>
             <p className={styles.joinNote}>
               Already have access? <a href="/console">Go to console.</a>
             </p>

@@ -227,34 +227,6 @@
   line-height: 1.8;
 }
 
-.heroNote {
-  margin: var(--space-4) 0 48px;
-  color: var(--color-text-muted);
-  font-size: 0.75rem;
-}
-
-.heroNote a {
-  color: var(--color-interactive);
-  text-underline-offset: 3px;
-}
-
-.heroNote a:hover {
-  color: var(--color-interactive-hover);
-}
-
-.storyLink {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  color: var(--color-interactive);
-  font-size: 0.8125rem;
-  text-decoration: none;
-}
-
-.storyLink:hover {
-  opacity: 0.6;
-}
-
 .storySection {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -455,7 +427,7 @@
 .joinActions {
   display: flex;
   flex-direction: column;
-  align-items: start;
+  align-items: end;
   gap: var(--space-4);
 }
 
@@ -464,6 +436,7 @@
   color: var(--color-text-muted);
   font-size: 0.75rem;
   line-height: 1.8;
+  text-align: right;
 }
 
 .joinNote a {
@@ -513,7 +486,6 @@
   .hero h1 { font-size: clamp(2.75rem, 10vw, 4rem); }
   .hero .eyebrow { font-size: 0.625rem; }
   .introduction { max-width: 420px; font-size: 1rem; }
-  .heroNote { margin-bottom: var(--space-8); }
   .storySection { grid-template-columns: 1fr; padding-block: 64px; gap: var(--space-8); }
   .buildSection { padding-block: 64px; }
   .buildHeading { align-items: start; flex-direction: column; gap: var(--space-6); }
