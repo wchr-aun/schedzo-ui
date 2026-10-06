@@ -14,6 +14,7 @@ import {RepositoryCard} from "@/components/landing/repository-card/repository-ca
 import {FeatureCard} from "@/components/landing/feature-card/feature-card";
 import {ScrollReveal} from "@/components/ui/scroll-reveal/scroll-reveal";
 import styles from "./landing-page.module.css";
+import {CopyableContent} from "@/components/ui/copyable-content/copyable-content";
 
 const exampleRentAmount = 2_273;
 
@@ -198,7 +199,10 @@ export function LandingPage() {
             </p>
           </ScrollReveal>
           <ScrollReveal className={styles.joinActions}>
-            <a className={styles.primaryLink} href="mailto:wchr.aun@gmail.com">Say hello <EmailIcon /></a>
+            <a className={styles.primaryLink} href="mailto:join@schedzo.app">Say hello <EmailIcon /></a>
+            <p className={styles.joinEmail}>
+              Or copy: <CopyableContent value="join@schedzo.app">join@schedzo.app</CopyableContent>
+            </p>
             <p className={styles.joinNote}>
               Already have access? <a href="/console">Go to console.</a>
             </p>
