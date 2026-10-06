@@ -1,7 +1,5 @@
 .flow {
-  zoom: 1;
-  width: min(100%, 420px);
-  margin: var(--space-8) 0 0;
+  margin: 0;
 }
 
 .player {
@@ -10,6 +8,21 @@
   grid-template-areas: "steps controls";
   gap: var(--space-3);
   align-items: start;
+}
+
+.player[data-static="true"] {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "steps";
+}
+
+.player[data-static="true"] .steps {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.player[data-static="true"] .arrow {
+  padding-block: var(--space-1);
+  font-size: 1.125rem;
 }
 
 .steps {

@@ -6,9 +6,23 @@ import {ToastProvider} from "@/components/providers/toast-provider/toast-provide
 import {headers} from "next/headers";
 
 export const metadata: Metadata = {
-  title: "Schedzo - On schedule",
+  metadataBase: new URL("https://schedzo.app"),
+  title: "Schedzo – Schedule Transfers To & From Monzo Pots",
   description:
-    "Schedule transfers into and out of your Monzo pots with Schedzo. Automate recurring deposits and withdrawals, track upcoming transfers, and manage your saving plans.",
+    "Schedule automatic transfers into and out of your Monzo pots, including Savings Pot withdrawals. Automate bills and keep money in savings until you need it.",
+  openGraph: {
+    title: "Schedzo – Schedule Transfers To & From Monzo Pots",
+    description: "Schedule automatic transfers into and out of your Monzo pots, including Savings Pot withdrawals.",
+    url: "https://schedzo.app/",
+    siteName: "Schedzo",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Schedzo – Schedule Transfers To & From Monzo Pots",
+    description: "Schedule automatic transfers into and out of your Monzo pots, including Savings Pot withdrawals.",
+  },
+  alternates: { canonical: "/" },
   icons: {
     icon: "/favicon.ico",
   },

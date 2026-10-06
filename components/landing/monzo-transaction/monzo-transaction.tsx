@@ -20,7 +20,7 @@ type MonzoTransactionProps = ({
   amount: number;
   recipient: string;
   initials: string;
-}) & {revealTrigger?: "scroll" | "mount"};
+}) & {revealTrigger?: "scroll" | "mount"; animate?: boolean};
 
 export function MonzoTransaction(props: MonzoTransactionProps) {
   const parts = formatMoneyParts(props.amount, "GBP");
@@ -29,8 +29,8 @@ export function MonzoTransaction(props: MonzoTransactionProps) {
     ? parts.filter(part => part.type !== "decimal" && part.type !== "fraction").map(part => part.value).join("")
     : amount;
 
-  return (
-    <ScrollReveal effect="popup" className={styles.row} trigger={props.revealTrigger}>
+  const content = (
+    <>
       {props.kind === "transfer" ? (
         <div className={styles.appIcon}>
           <Image src="/logo.png" alt="" width={44} height={44} />
@@ -66,6 +66,10 @@ export function MonzoTransaction(props: MonzoTransactionProps) {
           ))}
         </span>
       )}
-    </ScrollReveal>
+    </>
   );
+
+  return props.animate === false
+    ? <div className={styles.row}>{content}</div>
+    : <ScrollReveal effect="popup" className={styles.row} trigger={props.revealTrigger}>{content}</ScrollReveal>;
 }
