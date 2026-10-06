@@ -181,6 +181,20 @@ For authentication changes, also test:
 - Successful callbacks set the cookie without exposing the JWT in the response body.
 - The console page recognizes the configured session cookie.
 
+## Visual evidence for UI/UX changes
+
+- Every pull request that changes UI or UX must include screenshots or a video
+  showing the resulting changes in its description.
+- For updates to existing UI, include a clearly labelled before-and-after
+  comparison using the PR base and updated branch, with matching viewport sizes,
+  themes, and representative data.
+- Include desktop and mobile views when responsive layout is affected. Use video
+  when an interaction or animation is better explained through motion.
+- Capture rendered UI and attach the evidence to GitHub so reviewers can view it
+  directly in the PR. Keep screenshots and recordings out of application assets.
+- Use example data and keep private account information, credentials, and secrets
+  out of visual evidence.
+
 ## Scope and safety
 
 - Preserve unrelated user changes.
