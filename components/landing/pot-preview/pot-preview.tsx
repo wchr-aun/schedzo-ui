@@ -1,56 +1,23 @@
-"use client";
-
-import {useMemo} from "react";
-import {Navbar} from "@/components/layout/navbar/navbar";
-import {SWRConfig} from "swr";
-import {ScheduledTransfers} from "@/components/scheduled-transfers/scheduled-transfers/scheduled-transfers";
-import {getScheduledTransfersPageKey} from "@/lib/scheduled-transfers/keys";
-import type {ScheduledTransfersPage} from "@/lib/scheduled-transfers/types";
-import {defaultScheduledTransferStatuses} from "@/lib/scheduled-transfers/types";
-import {PotDetails} from "@/components/pots/pot-details/pot-details";
-import {getPotsKey} from "@/lib/pots/keys";
-import {previewAccountId, previewPot} from "@/lib/pots/preview";
 import styles from "./pot-preview.module.css";
 
-export function PotPreview({transfersPage}: {transfersPage: ScheduledTransfersPage}) {
-  const previewDataConfig = useMemo(() => ({
-    provider: () => new Map(),
-    fallback: {
-      [getPotsKey(previewAccountId)]: [previewPot],
-      [getScheduledTransfersPageKey(previewAccountId, previewPot.id, defaultScheduledTransferStatuses, 0)]: transfersPage,
-    },
-    revalidateOnMount: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    refreshInterval: 0,
-  }), [transfersPage]);
+export function PotPreview() {
   return (
-    <figure className={styles.preview} aria-label="Example pot page with a balance and scheduled transfers">
+    <figure className={styles.preview} aria-label="Sample Monzo Pot with upcoming scheduled transfers">
       <div className={styles.orbit} aria-hidden="true" />
       <div className={styles.phone}>
-        <div className={styles.statusBar} aria-hidden="true">
-          <span>9:41</span><span className={styles.camera} /><span></span>
-        </div>
-        <div className={styles.viewport}>
-          <fieldset disabled inert aria-label="Pot page preview" className={styles.app}>
-            <div className={styles.appBar}>
-              <Navbar logoHref="/" />
-            </div>
-            <div className={styles.screen}>
-              <SWRConfig value={previewDataConfig}>
-                <div className={styles.potDetails}>
-                  <PotDetails accountId={previewAccountId} potId={previewPot.id} />
-                </div>
-                <div className={styles.scheduledTransfers}>
-                  <ScheduledTransfers accountId={previewAccountId} potId={previewPot.id} />
-                </div>
-              </SWRConfig>
-            </div>
-          </fieldset>
+        <div className={styles.statusBar} aria-hidden="true"><span>9:41</span><span className={styles.camera} /></div>
+        <div className={styles.screen}>
+          <p className={styles.label}>Savings Pot</p>
+          <h2>Rainy day</h2>
+          <div className={styles.balance}><span>Pot balance</span><strong>£5,549.54</strong></div>
+          <div className={styles.transfersHeading}><h3>Upcoming transfers</h3><span>2</span></div>
+          <ul className={styles.transferList}>
+            <li><span className={styles.amountIn}>+ £50.00</span><span className={styles.status}>Pending</span><strong>Weekly deposit</strong><span className={styles.transferMeta}>Into Rainy day · Weekly</span></li>
+            <li><span className={styles.amountOut}>− £25.00</span><span className={styles.status}>Pending</span><strong>Monthly withdrawal</strong><span className={styles.transferMeta}>To main balance · Monthly</span></li>
+          </ul>
         </div>
         <div className={styles.homeIndicator} aria-hidden="true" />
       </div>
-      <figcaption className={styles.caption}><span className={styles.captionDot} /> Your plans, at a glance. </figcaption>
     </figure>
   );
 }
