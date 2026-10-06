@@ -143,6 +143,20 @@
   color: var(--color-interactive-hover);
 }
 
+.storyLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-10);
+  color: var(--color-interactive);
+  font-size: 0.8125rem;
+  text-decoration: none;
+}
+
+.storyLink:hover {
+  color: var(--color-interactive-hover);
+}
+
 .page a:focus-visible {
   outline: var(--focus-ring);
   outline-offset: 5px;
@@ -214,7 +228,7 @@
 
 .invitation {
   max-width: 390px;
-  margin: 0 0 var(--space-6);
+  margin: 0 0 var(--space-3);
   color: var(--color-text-muted);
   font-size: 0.875rem;
   line-height: 1.8;
@@ -479,6 +493,7 @@
   .hero h1 { font-size: clamp(2.75rem, 10vw, 4rem); }
   .hero .eyebrow { font-size: 0.625rem; }
   .introduction { max-width: 420px; font-size: 1rem; }
+  .storyLink { margin-top: var(--space-8); }
   .storySection { grid-template-columns: 1fr; padding-block: 64px; gap: var(--space-8); }
   .buildSection { padding-block: 64px; }
   .buildHeading { align-items: start; flex-direction: column; gap: var(--space-6); }

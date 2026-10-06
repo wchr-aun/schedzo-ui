@@ -60,6 +60,7 @@ export function LandingPage() {
             <p className={styles.heroNote}>
               <a href="#demo">Curious how it works? Try the demo.</a>
             </p>
+            <a className={styles.storyLink} href="#why">A little about the project <ArrowIcon direction="down" /></a>
           </ScrollReveal>
           <ScrollReveal delay={120}><PotPreview transfersPage={transfersPage} /></ScrollReveal>
         </section>
