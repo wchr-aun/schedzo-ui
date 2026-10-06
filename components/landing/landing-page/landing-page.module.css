@@ -127,6 +127,35 @@
   background: var(--color-primary-hover);
 }
 
+.heroNote {
+  margin: var(--space-4) 0 48px;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+}
+
+.heroNote a {
+  color: var(--color-interactive);
+  text-underline-offset: 3px;
+}
+
+.heroNote a:hover,
+.joinNote a:hover {
+  color: var(--color-interactive-hover);
+}
+
+.storyLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-interactive);
+  font-size: 0.8125rem;
+  text-decoration: none;
+}
+
+.storyLink:hover {
+  opacity: 0.6;
+}
+
 .page a:focus-visible {
   outline: var(--focus-ring);
   outline-offset: 5px;
@@ -136,6 +165,7 @@
 .storySection,
 .buildSection,
 .codeSection,
+.joinSection,
 .demoSection {
   width: min(100% - 80px, 1160px);
   margin-inline: auto;
@@ -195,32 +225,12 @@
   line-height: 1.75;
 }
 
-.heroNote {
-  margin: var(--space-4) 0 48px;
+.invitation {
+  max-width: 390px;
+  margin: 0 0 var(--space-3);
   color: var(--color-text-muted);
-  font-size: 0.75rem;
-}
-
-.heroNote a {
-  color: var(--color-interactive);
-  text-underline-offset: 3px;
-}
-
-.heroNote a:hover {
-  color: var(--color-interactive-hover);
-}
-
-.storyLink {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  color: var(--color-interactive);
-  font-size: 0.8125rem;
-  text-decoration: none;
-}
-
-.storyLink:hover {
-  opacity: 0.6;
+  font-size: 0.875rem;
+  line-height: 1.8;
 }
 
 .storySection {
@@ -273,7 +283,8 @@
   line-height: 1.8;
 }
 
-.storyContent a {
+.storyContent a,
+.joinDescription a {
   color: var(--color-interactive);
 }
 
@@ -406,6 +417,7 @@
   text-align: left;
 }
 
+.joinSection,
 .demoSection {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -415,10 +427,35 @@
   border-top: 1px solid var(--color-border);
 }
 
+.joinSection {
+  padding-block: 64px;
+}
+
+.joinActions {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: var(--space-4);
+}
+
+.joinNote {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  line-height: 1.8;
+  text-align: right;
+}
+
+.joinNote a {
+  color: var(--color-interactive);
+  text-underline-offset: 3px;
+}
+
 .demoSection h2 {
   font-size: clamp(1.75rem, 3vw, 2.5rem);
 }
 
+.joinDescription,
 .demoDescription {
   max-width: 640px;
   margin: var(--space-4) 0 0;
@@ -445,6 +482,7 @@
   .storySection,
   .buildSection,
   .codeSection,
+  .joinSection,
   .demoSection { width: calc(100% - 40px); }
   .navigation { min-height: 76px; }
   .brand img { width: 44px; height: 44px; }
@@ -464,7 +502,10 @@
   .notificationFeature { grid-template-columns: 1fr; gap: var(--space-6); }
   .repositories { grid-template-columns: 1fr; }
   .codeSection { padding: 48px var(--space-5); margin-bottom: 48px; }
+  .joinSection,
   .demoSection { grid-template-columns: 1fr; padding-block: var(--space-8) 48px; }
+  .joinActions { align-items: start; }
+  .joinNote { text-align: left; }
 }
 
 @media (max-width: 560px) {
