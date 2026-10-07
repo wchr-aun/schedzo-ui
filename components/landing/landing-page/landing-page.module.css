@@ -329,11 +329,11 @@
   content: "";
 }
 
-.storyContent p {
+.storyText {
   margin: 0;
 }
 
-.storyContent p,
+.storyText,
 .buildDescription,
 .notificationCopy p,
 .codeDescription p {
@@ -347,7 +347,7 @@
   color: var(--color-interactive);
 }
 
-.storyContent p + p {
+.storyText + .storyText {
   margin-top: var(--space-4);
 }
 
