@@ -11,6 +11,20 @@ Rendered with the T3 collaborative browser using sample accounts and transfers.
 
 These files are review evidence, not application assets.
 
+## Motivation layout
+
+- Updated motivation captures show the full-width heading, the experience and
+  declined-payment preview together on the left, and the workaround and
+  motivation on the right. The guide link follows both columns.
+- The story stacks at 960px and below. Reading order remains context, declined payment,
+  workaround, motivation, and guide link.
+- Captures retain the light theme, matching PR-base image dimensions, and
+  desktop 1280 × 1600 / mobile 390 × 1800 viewports. The subsequent payment
+  example is set to its completed stage.
+- Checks cover widths 320, 390, 768, 960, 961, 1024, 1280, and 1440 in both
+  themes with no horizontal overflow. The desktop story columns finish about
+  9px apart at both 1280px and 1024px.
+
 ## Notification caption update
 
 - `base-landing-notification-*` captures use the same PR base SHA listed above;

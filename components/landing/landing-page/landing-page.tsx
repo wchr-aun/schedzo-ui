@@ -77,42 +77,48 @@ export function LandingPage() {
             </ScrollReveal>
           </div>
           <div className={styles.storyContent}>
-            <ScrollReveal className={styles.storyProblem}>
-              <h3>Payday and rent don&apos;t always line up.</h3>
-              <p className={styles.storyText}>
-                Imagine payday is on the 28th and rent is due on the 15th of the following month. You&apos;d like to keep the rent money in a Savings Pot between those dates, rather than leave it in your main balance.
-              </p>
-              <p className={styles.storyText}>
-                I ran into this myself a few times. The rent money was in my Savings Pot, but I hadn&apos;t moved it back before the payment was due. The payment was declined.
-              </p>
-            </ScrollReveal>
-            <ScrollReveal className={styles.storyWorkaround}>
-              <h3>The transfer I had to remember.</h3>
-              <p className={styles.storyText}>
-                Your rent payment is arranged separately through Monzo and comes from your main balance. Before it goes out, the money needs to move back from your Savings Pot. You can make that withdrawal yourself, but it&apos;s another monthly task to remember.
-              </p>
-            </ScrollReveal>
-            <figure className={styles.declinedPreview}>
+            <div className={styles.storyProblem}>
               <ScrollReveal>
-                <MonzoTransaction revealTrigger="mount" kind="declined" amount={exampleRentAmount * 100} recipient="Landlord" initials="L" />
-                <figcaption>An illustration of my experience, using sample data.</figcaption>
+                <h3>Payday and rent don&apos;t always line up.</h3>
+                <p className={styles.storyText}>
+                  Imagine payday is on the 28th and rent is due on the 15th of the following month. You&apos;d like to keep the rent money in a Savings Pot between those dates, rather than leave it in your main balance.
+                </p>
+                <p className={styles.storyText}>
+                  I ran into this myself a few times. The rent money was in my Savings Pot, but I hadn&apos;t moved it back before the payment was due. The payment was declined.
+                </p>
+                <figure className={styles.declinedPreview}>
+                  <MonzoTransaction revealTrigger="mount" kind="declined" amount={exampleRentAmount * 100} recipient="Landlord" initials="L" />
+                  <figcaption>An illustration of my experience, using sample data.</figcaption>
+                </figure>
               </ScrollReveal>
-            </figure>
-            <ScrollReveal className={styles.storyMotivation}>
-              <h3>What I wanted to build.</h3>
-              <p className={styles.storyText}>
-                After it happened a few times, I wanted a small tool that could schedule the Pot withdrawal ahead of my rent payment, so I wouldn&apos;t have to remember to move the money myself each month.
-              </p>
-              <p className={styles.storyText}>
-                I also wanted to explore APIs in UK banking and build a useful, open-source project around them.
-              </p>
-            </ScrollReveal>
-            <ScrollReveal className={styles.storyArticle}>
-              <p className={styles.storyText}>
-                Looking at other ways to do this? <a href="/schedule-monzo-savings-pot-withdrawals">Read the guide to scheduling Monzo Savings Pot withdrawals.</a>
-              </p>
-            </ScrollReveal>
+            </div>
+            <div className={styles.storyResponse}>
+              <div className={styles.storyWorkaround}>
+                <ScrollReveal>
+                  <h3>The transfer I had to remember.</h3>
+                  <p className={styles.storyText}>
+                    Your rent payment is arranged separately through Monzo and comes from your main balance. Before it goes out, the money needs to move back from your Savings Pot. You can make that withdrawal yourself, but it&apos;s another monthly task to remember.
+                  </p>
+                </ScrollReveal>
+              </div>
+              <div className={styles.storyMotivation}>
+                <ScrollReveal>
+                  <h3>What I wanted to build.</h3>
+                  <p className={styles.storyText}>
+                    After it happened a few times, I wanted a small tool that could schedule the Pot withdrawal ahead of my rent payment, so I wouldn&apos;t have to remember to move the money myself each month.
+                  </p>
+                  <p className={styles.storyText}>
+                    I also wanted to explore APIs in UK banking and build a useful, open-source project around them.
+                  </p>
+                </ScrollReveal>
+              </div>
+            </div>
           </div>
+          <ScrollReveal className={styles.storyArticle}>
+            <p className={styles.storyText}>
+              Looking at other ways to do this? <a href="/schedule-monzo-savings-pot-withdrawals">Read the guide to scheduling Monzo Savings Pot withdrawals.</a>
+            </p>
+          </ScrollReveal>
         </section>
 
         <section id="building" className={styles.buildSection} aria-labelledby="building-heading">
