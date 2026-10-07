@@ -99,10 +99,7 @@
 
 @container payment-flow-example (max-width: 560px) {
   .example {
-    padding: 0;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
+    padding: var(--space-4);
   }
 
   .summary { gap: var(--space-5); }
@@ -154,5 +151,5 @@
 
 /* Retain the panel while leaving enough room for the amount in a narrow card. */
 @container payment-flow-example (max-width: 320px) {
-  .compact { padding-inline: var(--space-1); }
+  .example { padding-inline: var(--space-1); }
 }

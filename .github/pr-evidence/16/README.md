@@ -59,3 +59,16 @@ These files are review evidence, not application assets.
   remains visible without reveal state attributes.
 - `pnpm test` passed all 263 tests in 44 files; `pnpm typecheck`, `pnpm build`,
   and `git diff --check` also passed after the component change.
+
+## Mobile payment-example panel
+
+- The landing page keeps the mint panel, border, and rounded corners at mobile
+  widths. Panel padding reduces to 16px, with 4px horizontal padding when the
+  example container is 320px wide or less so amounts keep enough room.
+- Refreshed `updated-landing-solution-mobile.png` at 390 × 1800 CSS pixels
+  (780 × 3600 PNG), matching the PR-base image dimensions, light theme,
+  completed payment-flow stage, and the “So I built Schedzo” section.
+- Checked completed flows at 320, 390, 560, 768, and 1280px in light and dark
+  themes, plus the pending flow at 320px. No page or component overflow.
+  The article retains its existing panel padding at 320 and 390px.
+- All 263 tests in 44 files, typecheck, build, and whitespace checks passed.
