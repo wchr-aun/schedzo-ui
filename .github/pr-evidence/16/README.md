@@ -42,3 +42,20 @@ These files are review evidence, not application assets.
 - Narrow-phone rendering was also checked at 320 × 844 in the dark theme, with
   no horizontal overflow. T3 recording failed, so these screenshots show the
   settled open and closed states.
+
+## Rent explanation scroll reveal
+
+- The landing-page title, numbered explanation, and sample-data note reveal
+  together through the existing `ScrollReveal` component. The article's
+  `animated={false}` example keeps its static copy and payment flow.
+- The additional `updated-rent-explanation-*-desktop.png` captures show this
+  branch before entry and after scrolling 300px, at 1280 × 900 in the light
+  theme with sample data. These are interaction states on the updated branch;
+  the PR-base comparisons above remain the before-and-after design evidence.
+- T3 recording failed again, so screenshots show the starting and settled
+  states. Browser inspection verified opacity 0 before entry, approximately
+  0.49 during the rise animation, and 1 after it settled. Desktop 1280 × 900
+  and mobile 390 × 844 were checked with no horizontal overflow. The article
+  remains visible without reveal state attributes.
+- `pnpm test` passed all 263 tests in 44 files; `pnpm typecheck`, `pnpm build`,
+  and `git diff --check` also passed after the component change.
