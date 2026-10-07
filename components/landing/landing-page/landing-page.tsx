@@ -36,9 +36,9 @@ export function LandingPage() {
             <span>Schedzo<span className={styles.brandCaption}>On schedule.</span></span>
           </a>
           <div className={styles.navigationControls}>
-            <a className={styles.consoleLink} href="/console">
+            <ExternalLink className={styles.consoleLink} href="/console" aria-label="Go to console (opens in a new tab)">
               Go to console
-            </a>
+            </ExternalLink>
             <ThemeToggle />
           </div>
         </nav>
@@ -59,7 +59,7 @@ export function LandingPage() {
             </p>
             <div className={styles.heroActions}>
               <a className={styles.primaryLink} href="#join">Join us <ArrowIcon /></a>
-              <a className={styles.secondaryLink} href="/demo">Try the demo <ArrowIcon /></a>
+              <ExternalLink className={styles.secondaryLink} href="/demo" aria-label="Try the demo (opens in a new tab)">Try the demo</ExternalLink>
             </div>
             <p className={styles.heroNote}>
               Sample accounts only. No real money moves.
@@ -183,7 +183,7 @@ export function LandingPage() {
             </p>
           </ScrollReveal>
           <ScrollReveal>
-            <a className={styles.primaryLink} href="/demo">Open the demo <ArrowIcon /></a>
+            <ExternalLink className={styles.primaryLink} href="/demo" aria-label="Open the demo (opens in a new tab)">Open the demo</ExternalLink>
           </ScrollReveal>
         </section>
 
@@ -239,7 +239,7 @@ export function LandingPage() {
               Or copy: <CopyableContent value="join@schedzo.app">join@schedzo.app</CopyableContent>
             </p>
             <p className={styles.joinNote}>
-              Already have access? <a href="/console">Go to console.</a>
+              Already have access? <ExternalLink href="/console" aria-label="Go to console (opens in a new tab)">Go to console.</ExternalLink>
             </p>
           </ScrollReveal>
         </section>
