@@ -158,10 +158,12 @@ export function LandingPage() {
                 Schedzo sends a notification to your Monzo app as soon as a scheduled transfer completes or fails. Delivery depends on Monzo&apos;s API.
               </p>
             </ScrollReveal>
-            <figure className={styles.notificationPreview}>
-              <MonzoNotification title="🎉 £50.00 deposited" />
-              <figcaption>Example transfer notification using sample data.</figcaption>
-            </figure>
+            <ScrollReveal effect="popup" className={styles.notificationPreview}>
+              <MonzoNotification
+                title="🎉 £50.00 deposited"
+                caption="Example transfer notification using sample data."
+              />
+            </ScrollReveal>
           </div>
         </section>
 

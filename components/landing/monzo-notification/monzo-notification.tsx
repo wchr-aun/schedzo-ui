@@ -1,16 +1,16 @@
 "use client";
 
 import {useEffect, useId, useRef, useState} from "react";
-import {ScrollReveal} from "@/components/ui/scroll-reveal/scroll-reveal";
 import Image from "next/image";
 import styles from "./monzo-notification.module.css";
 
 type MonzoNotificationProps = {
   title: string;
   message?: string;
+  caption?: string;
 };
 
-export function MonzoNotification({title, message}: MonzoNotificationProps) {
+export function MonzoNotification({title, message, caption}: MonzoNotificationProps) {
   const [open, setOpen] = useState(false);
   const [read, setRead] = useState(false);
   const [playback, setPlayback] = useState(0);
@@ -29,24 +29,24 @@ export function MonzoNotification({title, message}: MonzoNotificationProps) {
   }, [open, read]);
 
   return (
-    <ScrollReveal effect="popup">
-      <div className={styles.notificationDemo} onKeyDown={event => {
-        if (event.key === "Escape" && open) close();
-      }}>
-        <button ref={triggerRef} className={styles.appButton} type="button" hidden={open}
-          aria-label="Open Monzo notification" aria-describedby={hintId}
-          aria-controls={notificationId} aria-expanded={open}
-          onClick={() => {
-            setOpen(true);
-            setRead(true);
-            setPlayback(current => current + 1);
-          }}>
-          <Image src="/monzo-logo.png" alt="" width={56} height={56} />
-          {!read ? <span className={styles.badge} aria-hidden="true">1</span> : null}
-        </button>
-        <p id={hintId} className={styles.hint} hidden={open}>{read ? "Click Monzo to replay" : "1 new notification · Click to open"}</p>
-        {open ? (
-          <div key={playback} id={notificationId} className={styles.notificationCard} role="region" aria-label="Monzo notification">
+    <div className={styles.notificationDemo} onKeyDown={event => {
+      if (event.key === "Escape" && open) close();
+    }}>
+      <button ref={triggerRef} className={styles.appButton} type="button" hidden={open}
+        aria-label="Open Monzo notification" aria-describedby={hintId}
+        aria-controls={notificationId} aria-expanded={open}
+        onClick={() => {
+          setOpen(true);
+          setRead(true);
+          setPlayback(current => current + 1);
+        }}>
+        <Image src="/monzo-logo.png" alt="" width={56} height={56} />
+        {!read ? <span className={styles.badge} aria-hidden="true">1</span> : null}
+      </button>
+      <p id={hintId} className={styles.hint} hidden={open}>{read ? "Click Monzo to replay" : "1 new notification · Click to open"}</p>
+      {open ? (
+        <figure key={playback} className={styles.notificationPreview}>
+          <div id={notificationId} className={styles.notificationCard} role="region" aria-label="Monzo notification">
             <div className={styles.notificationIcon}>
               <Image src="/monzo-logo.png" alt="" width={40} height={40} />
             </div>
@@ -62,8 +62,9 @@ export function MonzoNotification({title, message}: MonzoNotificationProps) {
               {message && <p className={styles.notificationMessage}>{message}</p>}
             </div>
           </div>
-        ) : null}
-      </div>
-    </ScrollReveal>
+          {caption ? <figcaption className={styles.caption}>{caption}</figcaption> : null}
+        </figure>
+      ) : null}
+    </div>
   );
 }
