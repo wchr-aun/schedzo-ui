@@ -21,7 +21,7 @@ function enter(element: Element) {
   });
 }
 
-function advance(milliseconds = 3_000) {
+function advance(milliseconds = 2_000) {
   act(() => vi.advanceTimersByTime(milliseconds));
 }
 
@@ -62,12 +62,12 @@ describe("PaymentFlow", () => {
     expect(within(flow).queryByText("Landlord")).not.toBeInTheDocument();
 
     enter(flow);
-    expect(screen.getByText("Next step in 3s")).toBeInTheDocument();
-    advance(1_000);
     expect(screen.getByText("Next step in 2s")).toBeInTheDocument();
-    advance(2_000);
+    advance(1_000);
+    expect(screen.getByText("Next step in 1s")).toBeInTheDocument();
+    advance(1_000);
     expect(screen.getByRole("status")).toHaveTextContent("Step 2 of 3");
-    expect(screen.getByText("Next step in 3s")).toBeInTheDocument();
+    expect(screen.getByText("Next step in 2s")).toBeInTheDocument();
     expect(within(flow).getByText("completed")).toBeVisible();
     expect(within(flow).getByText(/withdrawn/)).toBeVisible();
     expect(within(flow).queryByText("Landlord")).not.toBeInTheDocument();
@@ -90,13 +90,13 @@ describe("PaymentFlow", () => {
 
     const first = screen.getByRole("button", {name: "Replay step 1: Withdrawal due soon"});
     fireEvent.click(first);
-    advance(2_000);
+    advance(1_000);
     fireEvent.click(first);
     advance(500);
     expect(first).toHaveAttribute("aria-pressed", "true");
     expect(within(flow).getByText("pending")).toBeVisible();
     expect(within(flow).queryByText("Landlord")).not.toBeInTheDocument();
-    advance(2_500);
+    advance(1_500);
     expect(screen.getByRole("status")).toHaveTextContent("Step 2 of 3");
 
     fireEvent.click(screen.getByRole("button", {name: "Replay step 2: Transfer completed"}));
@@ -117,17 +117,21 @@ describe("PaymentFlow", () => {
     expect(screen.getByRole("status")).toHaveTextContent("Step 2 of 3");
   });
 
-  it("uses the same countdown duration on initial playback and replay", () => {
+  it("uses a two-second countdown on initial playback and replay", () => {
     const flow = renderFlow();
     enter(flow);
-    expect(screen.getByText("Next step in 3s")).toBeInTheDocument();
-    advance(2_000);
-    expect(screen.getByText("Next step in 1s")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", {name: "Replay step 1: Withdrawal due soon"}));
-    expect(screen.getByText("Next step in 3s")).toBeInTheDocument();
-    advance(2_000);
-    expect(screen.getByRole("status")).toHaveTextContent("Step 1 of 3");
+    expect(screen.getByText("Next step in 2s")).toBeInTheDocument();
     advance(1_000);
+    expect(screen.getByText("Next step in 1s")).toBeInTheDocument();
+    advance(999);
+    expect(screen.getByRole("status")).toHaveTextContent("Step 1 of 3");
+    advance(1);
+    expect(screen.getByRole("status")).toHaveTextContent("Step 2 of 3");
+    fireEvent.click(screen.getByRole("button", {name: "Replay step 1: Withdrawal due soon"}));
+    expect(screen.getByText("Next step in 2s")).toBeInTheDocument();
+    advance(1_999);
+    expect(screen.getByRole("status")).toHaveTextContent("Step 1 of 3");
+    advance(1);
     expect(screen.getByRole("status")).toHaveTextContent("Step 2 of 3");
   });
 
@@ -142,7 +146,7 @@ describe("PaymentFlow", () => {
     expect(screen.queryByRole("group", {name: "Replay payment flow"})).not.toBeInTheDocument();
     expect(screen.queryByText(/Next step in/)).not.toBeInTheDocument();
     expect(observers.size).toBe(0);
-    expect(timeout.mock.calls.some(([, delay]) => delay === 3_000)).toBe(false);
+    expect(timeout.mock.calls.some(([, delay]) => delay === 2_000)).toBe(false);
     timeout.mockRestore();
   });
 
@@ -185,7 +189,7 @@ describe("PaymentFlow", () => {
     expect(screen.getByRole("status")).toHaveTextContent("Step 1 of 3");
     expect(within(flow).queryByText("Landlord")).not.toBeInTheDocument();
     enter(flow);
-    expect(screen.getByText("Next step in 3s")).toBeInTheDocument();
+    expect(screen.getByText("Next step in 2s")).toBeInTheDocument();
     advance();
     expect(screen.getByRole("status")).toHaveTextContent("Step 2 of 3");
   });

@@ -3,7 +3,7 @@
 import {useEffect, useReducer} from "react";
 
 export type PaymentFlowStage = 1 | 2 | 3;
-export const paymentFlowStageDuration = 3_000;
+export const paymentFlowStageDuration = 2_000;
 const stageSeconds = paymentFlowStageDuration / 1_000;
 
 type PlaybackState = {
