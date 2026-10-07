@@ -83,8 +83,8 @@
 .explanation {
   margin-top: var(--space-2);
   color: var(--color-text-muted);
-  font-size: 0.6875rem;
-  line-height: 1.4;
+  font-size: 0.8125rem;
+  line-height: 1.55;
 }
 
 .explanation p {
@@ -133,7 +133,7 @@
 .stepLabel {
   margin: 0 0 var(--space-2);
   color: var(--color-text-muted);
-  font-size: 0.6875rem;
+  font-size: 0.8125rem;
   font-weight: 700;
 }
 
@@ -142,12 +142,12 @@
   padding: 0;
   margin: 0;
   border: 0;
-  cursor: not-allowed;
+  cursor: default;
 }
 
 .transferPreview :disabled,
 .transferPreview :disabled * {
-  cursor: not-allowed;
+  cursor: default;
 }
 
 .arrow {
@@ -161,6 +161,6 @@
 .flow figcaption {
   margin-top: var(--space-4);
   color: var(--color-heading);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   line-height: 1.6;
 }

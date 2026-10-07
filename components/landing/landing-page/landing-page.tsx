@@ -36,9 +36,9 @@ export function LandingPage() {
             <span>Schedzo<span className={styles.brandCaption}>On schedule.</span></span>
           </a>
           <div className={styles.navigationControls}>
-            <ExternalLink className={styles.consoleLink} href="/console">
+            <a className={styles.consoleLink} href="/console">
               Go to console
-            </ExternalLink>
+            </a>
             <ThemeToggle />
           </div>
         </nav>
@@ -57,13 +57,16 @@ export function LandingPage() {
             <p className={styles.invitation}>
               Free to join. Get in touch and I&apos;ll help you get set up.
             </p>
-            <a className={styles.primaryLink} href="#join">Join us <ArrowIcon /></a>
+            <div className={styles.heroActions}>
+              <a className={styles.primaryLink} href="#join">Join us <ArrowIcon /></a>
+              <a className={styles.secondaryLink} href="/demo">Try the demo <ArrowIcon /></a>
+            </div>
             <p className={styles.heroNote}>
-              <a href="#demo">Curious how it works? Try the demo.</a>
+              Sample accounts only. No real money moves.
             </p>
             <a className={styles.storyLink} href="#why">A little about the project <ArrowIcon direction="down" /></a>
           </ScrollReveal>
-          <ScrollReveal delay={120}><PotPreview transfersPage={transfersPage} /></ScrollReveal>
+          <ScrollReveal className={styles.heroPreview} delay={120}><PotPreview transfersPage={transfersPage} /></ScrollReveal>
         </section>
 
         <section id="why" className={styles.storySection} aria-labelledby="why-heading">
@@ -72,16 +75,15 @@ export function LandingPage() {
               <p className={styles.eyebrow}>01 / The motivation</p>
               <h2 id="why-heading">Why I&apos;m<br />building this.</h2>
             </ScrollReveal>
-            <PaymentFlow transfer={storyTransfer} />
           </div>
           <div className={styles.storyContent}>
-            <ScrollReveal>
+            <ScrollReveal className={styles.storyProblem}>
               <h3>The problem.</h3>
               <p>
                 Imagine payday is on the 28th and rent is due on the 15th. You could leave the rent money in a Savings Pot in the meantime, where it can keep earning interest. But Monzo doesn&apos;t let you schedule a recurring withdrawal from a Savings Pot for just before rent is due.
               </p>
             </ScrollReveal>
-            <ScrollReveal>
+            <ScrollReveal className={styles.storyWorkaround}>
               <h3>The workaround.</h3>
               <p>
                 You can schedule rent from your main balance, then move the money from your Savings Pot into that balance yourself beforehand. It works, but you have to remember to do it at the right time.
@@ -93,7 +95,8 @@ export function LandingPage() {
                 </ScrollReveal>
               </figure>
             </ScrollReveal>
-            <ScrollReveal>
+            <div className={styles.storyFlow}><PaymentFlow transfer={storyTransfer} /></div>
+            <ScrollReveal className={styles.storyMotivation}>
               <h3>Why build my own?</h3>
               <p>
                 <ExternalLink href="https://ifttt.com/monzo">IFTTT</ExternalLink> can automate some Monzo actions. I wanted to build a small, open-source tool focused on scheduled Pot transfers, including Savings Pot withdrawals.
@@ -104,7 +107,7 @@ export function LandingPage() {
                 so this felt like a good place to start.
               </p>
             </ScrollReveal>
-            <ScrollReveal>
+            <ScrollReveal className={styles.storyArticle}>
               <p>
                 Want to understand the options? <a href="/schedule-monzo-savings-pot-withdrawals">Read how to schedule withdrawals from Monzo Savings Pots.</a>
               </p>
@@ -156,7 +159,7 @@ export function LandingPage() {
             </ScrollReveal>
             <figure className={styles.notificationPreview}>
               <MonzoNotification title="🎉 £50.00 deposited" />
-              <figcaption>Example notification</figcaption>
+              <figcaption>Try the example notification</figcaption>
             </figure>
           </div>
         </section>
@@ -171,7 +174,7 @@ export function LandingPage() {
             </p>
           </ScrollReveal>
           <ScrollReveal>
-            <ExternalLink className={styles.primaryLink} href="/demo" aria-label="Open demo (opens in a new tab)" title="Opens in a new tab">Open demo</ExternalLink>
+            <a className={styles.primaryLink} href="/demo">Open the demo <ArrowIcon /></a>
           </ScrollReveal>
         </section>
 
