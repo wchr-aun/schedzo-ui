@@ -130,7 +130,20 @@ export function SavingsPotArticle() {
                 <h2 id="flow-heading">How Schedzo works</h2>
                 <p>Schedzo moves money between your own Monzo Pot and account. Your rent or bill payment remains set up separately with Monzo or the bill provider.</p>
                 <div className={styles.flowExample}>
-                  <PaymentFlowExample transfer={transfer} heading="From saved. To paid." animated={false} />
+                  <PaymentFlowExample
+                    transfer={transfer}
+                    heading={<>From saved.<br /> To paid.</>}
+                    animated={false}
+                    presentation="compact"
+                    explanation={{
+                      steps: [
+                        {title: "Your withdrawal is due.", description: "Schedzo runs the transfer on your configured date."},
+                        {title: "Your main balance is funded.", description: "The money moves out of your Savings Pot."},
+                        {title: "Monzo makes the payment.", description: "Your separately scheduled rent goes to your landlord."},
+                      ],
+                      note: "Illustration with sample data. No real money moves.",
+                    }}
+                  />
                 </div>
               </section>
 
