@@ -195,6 +195,87 @@ For authentication changes, also test:
 - Use example data and keep private account information, credentials, and secrets
   out of visual evidence.
 
+### T3 screenshots when the laptop lid is closed
+
+Use the T3 collaborative browser's page snapshots instead of an OS desktop
+screenshot. This workflow succeeded during a closed-laptop session while T3
+automation remained available. A closed lid or an initial snapshot failure alone
+does not establish that browser capture is unavailable.
+
+1. Call `preview_status` first. If no automation-capable preview is attached,
+   call `preview_open` with the local application URL before declaring it
+   unavailable. Read the returned `tabId`; do not reuse a tab ID from an earlier
+   session.
+2. Open the preview pane with `preview_open({tabId, open: true})`, including when
+   the tab is automation-capable but reports `visible: false`. Keep this tab open
+   during capture. Pass the same `tabId` to subsequent browser calls.
+3. Use `preview_resize` with an explicit freeform viewport, then
+   `preview_navigate` to the required route. Set matching themes, example data,
+   and interaction states for each before-and-after pair. Read `innerWidth`,
+   `innerHeight`, and `devicePixelRatio` through `preview_evaluate` to record the
+   actual viewport.
+4. Let hydration and reveal animations finish. On the landing page, scroll to
+   the bottom first to trigger the existing reveal behavior, then return to the
+   target section. Select the completed payment-flow stage through its replay
+   control when capturing that state. Wait about one second after the final
+   scroll or interaction, and inspect the relevant element positions. Do not
+   remove animations, force hidden elements visible, or alter source code just
+   to obtain a screenshot.
+5. Call `preview_snapshot({tabId, includeImage: false, save: true})`. This saves
+   the rendered PNG and returns `screenshotPath` without sending image data in
+   the tool output. Read the actual returned path rather than inventing one.
+6. Inspect the saved file with `view_image`. Confirm the intended content is
+   visible and the image is not blank, cropped, or captured mid-animation.
+   Check image dimensions as well as the reported browser viewport.
+
+In this session, snapshots initially returned `PreviewAutomationExecutionError`
+even though navigation and DOM inspection worked. Capture later recovered after
+retrying; opening the preview pane also recovered the requested image height
+after a saved image was cropped. For this failure pattern, check status, reopen
+the same tab with `open: true`, reapply the viewport, navigate, allow rendering
+to settle, and retry the saved snapshot. Inspect the resulting file before
+calling recovery successful. Do not assume a lid, permissions, or display issue
+without evidence, or switch browser systems just because the first call fails.
+
+PNG dimensions may be larger than the viewport because screenshots use physical
+pixels. For example, a 390 × 1800 CSS-pixel viewport produced a 780 × 3600 PNG.
+Compare the width and height scale factors and ensure before-and-after images
+use matching dimensions; do not reject a valid image solely for having twice
+the CSS-pixel dimensions. See
+[MDN's devicePixelRatio reference](https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio).
+
+### Capturing the PR base without changing the working branch
+
+- Read the PR's base SHA, for example with
+  `gh api repos/<owner>/<repo>/pulls/<number> --jq '.base.sha'`, and create an
+  isolated temporary worktree at that SHA. Record it with the evidence.
+- Run the base application on a separate port, such as 3001, and keep the updated
+  application on its existing port. Capture both through the same T3 tab with
+  matching viewport, theme, section position, and representative data.
+- A symlinked `node_modules` caused `pnpm dev` inside the temporary worktree to
+  fail with `workspace hoist directory is not a real directory`. The successful
+  workaround was to link the primary workspace's existing dependencies into
+  the base worktree, then run the following **from the primary workspace**:
+
+  ```bash
+  pnpm exec next dev /absolute/path/to/base-worktree --webpack --port 3001
+  ```
+
+  Provide any required local environment securely. Never print or commit copied
+  environment files. Stop the temporary server and remove the agent-owned
+  worktree when capture is complete; preserve preexisting checkouts and servers.
+- For long sections, this session used desktop 1280 × 1600 and mobile 390 × 1800
+  captures to include the flow and its context. Label extended capture heights
+  explicitly, and separately check scrolling at a normal phone viewport, such
+  as 390 × 844.
+- Keep clearly named evidence outside application assets. This PR used
+  `.github/pr-evidence/<number>/base-<section>-<device>.png` and
+  `updated-<section>-<device>.png`, with a README recording capture conditions.
+  When publishing is authorized, embed the GitHub-hosted images in the PR body
+  using URLs pinned to the pushed commit SHA. Refresh the image URLs when later
+  commits replace screenshots, and verify the files are accessible on GitHub.
+  Capturing evidence does not itself authorize a commit or push.
+
 ## Scope and safety
 
 - Preserve unrelated user changes.
