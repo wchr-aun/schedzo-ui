@@ -1,0 +1,110 @@
+.container {
+  container: payment-flow-example / inline-size;
+  min-width: 0;
+}
+
+.example {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  background: var(--color-status-completed-background);
+}
+
+.copy { min-width: 0; }
+
+.eyebrow {
+  margin: 0 0 var(--space-4);
+  color: var(--color-text-muted);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+
+.heading {
+  margin: 0 0 var(--space-6);
+  color: var(--color-heading);
+  font-size: 2rem;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.summary {
+  display: grid;
+  gap: var(--space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: flow;
+}
+
+.summary li {
+  position: relative;
+  padding-left: var(--space-8);
+  counter-increment: flow;
+}
+
+.summary li::before {
+  content: counter(flow, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 2px;
+  color: var(--color-primary);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.summary strong {
+  display: block;
+  color: var(--color-heading);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.summary span {
+  display: block;
+  margin-top: var(--space-1);
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+
+.note {
+  margin: var(--space-8) 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+.preview {
+  width: min(100%, 480px);
+  min-width: 0;
+  justify-self: center;
+}
+
+@container payment-flow-example (min-width: 900px) {
+  .example {
+    grid-template-columns: minmax(0, 1fr) 480px;
+    gap: var(--space-10);
+    padding: var(--space-8);
+  }
+}
+
+@container payment-flow-example (max-width: 560px) {
+  .example {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .summary { gap: var(--space-5); }
+  .heading { font-size: 1.5rem; }
+}

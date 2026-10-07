@@ -3,18 +3,21 @@ import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import {createPreviewTransfersPage} from "@/lib/scheduled-transfers/preview";
 import {PaymentFlow} from "./payment-flow";
 
-const observers = new Map<Element, IntersectionObserverCallback>();
+const observers = new Map<Element, Set<IntersectionObserverCallback>>();
 let reducedMotion = false;
+const preferenceListeners = new Set<() => void>();
 
-function renderFlow() {
+function renderFlow(props: {animated?: boolean; potName?: string} = {}) {
   const transfer = createPreviewTransfersPage().scheduledTransfers[1];
-  render(<PaymentFlow transfer={{...transfer, amount: 227_300}} />);
+  render(<PaymentFlow transfer={{...transfer, amount: 227_300}} {...props} />);
   return screen.getByRole("figure", {name: "Example of a pot withdrawal followed by a payment scheduled in Monzo"});
 }
 
 function enter(element: Element) {
   act(() => {
-    observers.get(element)?.([{isIntersecting: true} as IntersectionObserverEntry], {} as IntersectionObserver);
+    for (const callback of observers.get(element) ?? []) {
+      callback([{isIntersecting: true, intersectionRatio: 1} as IntersectionObserverEntry], {} as IntersectionObserver);
+    }
   });
 }
 
@@ -27,14 +30,19 @@ describe("PaymentFlow", () => {
     vi.useFakeTimers();
     observers.clear();
     reducedMotion = false;
+    preferenceListeners.clear();
     vi.stubGlobal("matchMedia", vi.fn(() => ({
-      matches: reducedMotion,
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
+      get matches() { return reducedMotion; },
+      addEventListener: vi.fn((_: string, callback: () => void) => preferenceListeners.add(callback)),
+      removeEventListener: vi.fn((_: string, callback: () => void) => preferenceListeners.delete(callback)),
     })));
     vi.stubGlobal("IntersectionObserver", class {
       constructor(private callback: IntersectionObserverCallback) {}
-      observe(element: Element) { observers.set(element, this.callback); }
+      observe(element: Element) {
+        const callbacks = observers.get(element) ?? new Set();
+        callbacks.add(this.callback);
+        observers.set(element, callbacks);
+      }
       disconnect() {}
     });
   });
@@ -54,9 +62,9 @@ describe("PaymentFlow", () => {
     expect(within(flow).queryByText("Landlord")).not.toBeInTheDocument();
 
     enter(flow);
-    expect(screen.getByText("Next step in 2s")).toBeInTheDocument();
+    expect(screen.getByText("Next step in 3s")).toBeInTheDocument();
     advance(1_000);
-    expect(screen.getByText("Next step in 1s")).toBeInTheDocument();
+    expect(screen.getByText("Next step in 2s")).toBeInTheDocument();
     advance(2_000);
     expect(screen.getByRole("status")).toHaveTextContent("Step 2 of 3");
     expect(screen.getByText("Next step in 3s")).toBeInTheDocument();
@@ -108,4 +116,78 @@ describe("PaymentFlow", () => {
     fireEvent.click(screen.getByRole("button", {name: "Replay step 2: Transfer completed"}));
     expect(screen.getByRole("status")).toHaveTextContent("Step 2 of 3");
   });
+
+  it("uses the same countdown duration on initial playback and replay", () => {
+    const flow = renderFlow();
+    enter(flow);
+    expect(screen.getByText("Next step in 3s")).toBeInTheDocument();
+    advance(2_000);
+    expect(screen.getByText("Next step in 1s")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", {name: "Replay step 1: Withdrawal due soon"}));
+    expect(screen.getByText("Next step in 3s")).toBeInTheDocument();
+    advance(2_000);
+    expect(screen.getByRole("status")).toHaveTextContent("Step 1 of 3");
+    advance(1_000);
+    expect(screen.getByRole("status")).toHaveTextContent("Step 2 of 3");
+  });
+
+  it("renders the complete static example without playback or scroll setup", () => {
+    const timeout = vi.spyOn(window, "setTimeout");
+    const flow = renderFlow({animated: false, potName: "Rent savings"});
+    expect(within(flow).getByText("completed")).toBeVisible();
+    expect(within(flow).getByText("Landlord")).toBeVisible();
+    expect(within(flow).getByText(/Rent savings/)).toBeVisible();
+    expect(within(flow).getByText(/£2,273.00 withdrawn/)).toBeVisible();
+    expect(within(flow).getByLabelText("£2,273.00 sent")).toBeVisible();
+    expect(screen.queryByRole("group", {name: "Replay payment flow"})).not.toBeInTheDocument();
+    expect(screen.queryByText(/Next step in/)).not.toBeInTheDocument();
+    expect(observers.size).toBe(0);
+    expect(timeout.mock.calls.some(([, delay]) => delay === 3_000)).toBe(false);
+    timeout.mockRestore();
+  });
+
+  it("completes active playback when reduced motion is enabled and keeps replay manual", () => {
+    const flow = renderFlow();
+    enter(flow);
+    advance(1_000);
+    act(() => {
+      reducedMotion = true;
+      for (const listener of preferenceListeners) listener();
+    });
+    expect(screen.getByRole("status")).toHaveTextContent("Step 3 of 3");
+    expect(within(flow).getByText("Landlord")).toBeVisible();
+    expect(screen.queryByText(/Next step in/)).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", {name: "Replay step 1: Withdrawal due soon"}));
+    advance(10_000);
+    expect(screen.getByRole("status")).toHaveTextContent("Step 1 of 3");
+  });
+
+  it("clears active timers when unmounted", () => {
+    const transfer = createPreviewTransfersPage().scheduledTransfers[1];
+    const {unmount} = render(<PaymentFlow transfer={transfer} />);
+    const flow = screen.getByRole("figure", {name: "Example of a pot withdrawal followed by a payment scheduled in Monzo"});
+    enter(flow);
+    expect(vi.getTimerCount()).toBeGreaterThan(0);
+    unmount();
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("pauses offscreen playback and restarts the current stage when it returns", () => {
+    const flow = renderFlow();
+    enter(flow);
+    advance(1_000);
+    act(() => {
+      for (const callback of observers.get(flow) ?? []) {
+        callback([{isIntersecting: false} as IntersectionObserverEntry], {} as IntersectionObserver);
+      }
+    });
+    advance(10_000);
+    expect(screen.getByRole("status")).toHaveTextContent("Step 1 of 3");
+    expect(within(flow).queryByText("Landlord")).not.toBeInTheDocument();
+    enter(flow);
+    expect(screen.getByText("Next step in 3s")).toBeInTheDocument();
+    advance();
+    expect(screen.getByRole("status")).toHaveTextContent("Step 2 of 3");
+  });
+
 });

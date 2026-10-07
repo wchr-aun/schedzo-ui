@@ -3,7 +3,7 @@ import { Footer } from "@/components/layout/footer/footer";
 import { ExternalLink } from "@/components/ui/external-link/external-link";
 import { ThemeToggle } from "@/components/ui/theme-toggle/theme-toggle";
 import { ArrowIcon } from "@/components/ui/icons/arrow-icon";
-import { PaymentFlow } from "@/components/landing/payment-flow/payment-flow";
+import { PaymentFlowExample } from "@/components/landing/payment-flow-example/payment-flow-example";
 import { SavingsInterestCalculator } from "@/components/landing/savings-interest-calculator/savings-interest-calculator";
 import { createPreviewTransfersPage } from "@/lib/scheduled-transfers/preview";
 import styles from "./savings-pot-article.module.css";
@@ -129,20 +129,8 @@ export function SavingsPotArticle() {
               <section className={styles.section} aria-labelledby="flow-heading">
                 <h2 id="flow-heading">How Schedzo works</h2>
                 <p>Schedzo moves money between your own Monzo Pot and account. Your rent or bill payment remains set up separately with Monzo or the bill provider.</p>
-                <div className={styles.example}>
-                  <div className={styles.exampleCopy}>
-                    <p className={styles.eyebrow}>The rent example</p>
-                    <h3>From saved.<br /> To paid.</h3>
-                    <ol className={styles.flowSummary}>
-                      <li><strong>Your withdrawal is due.</strong><span>Schedzo runs the transfer on your configured date.</span></li>
-                      <li><strong>Your main balance is funded.</strong><span>The money moves out of your Savings Pot.</span></li>
-                      <li><strong>Monzo makes the payment.</strong><span>Your separately scheduled rent goes to your landlord.</span></li>
-                    </ol>
-                    <p className={styles.exampleNote}>Illustration with sample data. No real money moves.</p>
-                  </div>
-                  <div className={styles.examplePlayer}>
-                    <PaymentFlow transfer={transfer} animated={false} />
-                  </div>
+                <div className={styles.flowExample}>
+                  <PaymentFlowExample transfer={transfer} heading="From saved. To paid." animated={false} />
                 </div>
               </section>
 

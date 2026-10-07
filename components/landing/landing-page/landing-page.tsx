@@ -8,7 +8,7 @@ import {Footer} from "@/components/layout/footer/footer";
 import {PotPreview} from "@/components/landing/pot-preview/pot-preview";
 import {MonzoNotification} from "@/components/landing/monzo-notification/monzo-notification";
 import {MonzoTransaction} from "@/components/landing/monzo-transaction/monzo-transaction";
-import {PaymentFlow} from "@/components/landing/payment-flow/payment-flow";
+import {PaymentFlowExample} from "@/components/landing/payment-flow-example/payment-flow-example";
 import {RepositoryCard} from "@/components/landing/repository-card/repository-card";
 import {FeatureCard} from "@/components/landing/feature-card/feature-card";
 import {ScrollReveal} from "@/components/ui/scroll-reveal/scroll-reveal";
@@ -91,14 +91,13 @@ export function LandingPage() {
               <p className={styles.storyText}>
                 Your rent payment is arranged separately through Monzo and comes from your main balance. Before it goes out, the money needs to move back from your Savings Pot. You can make that withdrawal yourself, but it&apos;s another monthly task to remember.
               </p>
-              <figure className={styles.declinedPreview}>
-                <ScrollReveal>
-                  <MonzoTransaction revealTrigger="mount" kind="declined" amount={exampleRentAmount * 100} recipient="Landlord" initials="L" />
-                  <figcaption>An illustration of my experience, using sample data.</figcaption>
-                </ScrollReveal>
-              </figure>
             </ScrollReveal>
-            <div className={styles.storyFlow}><PaymentFlow transfer={storyTransfer} /></div>
+            <figure className={styles.declinedPreview}>
+              <ScrollReveal>
+                <MonzoTransaction revealTrigger="mount" kind="declined" amount={exampleRentAmount * 100} recipient="Landlord" initials="L" />
+                <figcaption>An illustration of my experience, using sample data.</figcaption>
+              </ScrollReveal>
+            </figure>
             <ScrollReveal className={styles.storyMotivation}>
               <h3>What I wanted to build.</h3>
               <p className={styles.storyText}>
@@ -126,6 +125,9 @@ export function LandingPage() {
               Schedzo helps you schedule recurring transfers into and out of your Pots.
             </p>
           </ScrollReveal>
+          <div className={styles.buildExample}>
+            <PaymentFlowExample transfer={storyTransfer} heading="Here’s how the rent example works." />
+          </div>
           <div className={styles.features}>
             <ScrollReveal>
               <FeatureCard

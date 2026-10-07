@@ -275,26 +275,19 @@
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
   grid-template-areas:
     "intro problem"
-    "flow workaround"
-    "flow motivation"
-    "flow article";
+    "declined workaround"
+    "declined motivation"
+    "declined article";
   column-gap: clamp(48px, 6vw, 72px);
   row-gap: var(--space-6);
   border-top: 1px solid var(--color-border);
   padding-block: 100px;
 }
 
-.sectionIntro > :global(figure) {
-  width: min(100%, 460px);
-  margin: var(--space-6) 0 0;
-}
-
 .sectionIntro { grid-area: intro; }
 .storyContent { display: contents; }
 .storyProblem { grid-area: problem; }
 .storyWorkaround { grid-area: workaround; }
-.storyFlow { grid-area: flow; align-self: start; min-width: 0; }
-.storyFlow > :global(figure) { width: min(100%, 480px); margin: 0 auto; }
 .storyMotivation { grid-area: motivation; }
 .storyArticle { grid-area: article; }
 
@@ -321,7 +314,8 @@
   font-size: 1.5rem;
 }
 
-.storyContent > div + div h3::before {
+.storyWorkaround h3::before,
+.storyMotivation h3::before {
   display: block;
   width: 2rem;
   padding: var(--space-2) 0;
@@ -365,8 +359,11 @@
 }
 
 .declinedPreview {
+  grid-area: declined;
+  align-self: start;
+  min-width: 0;
   width: min(100%, 420px);
-  margin: var(--space-5) 0;
+  margin: 0;
 }
 
 .declinedPreview figcaption {
@@ -392,6 +389,10 @@
 .buildDescription {
   max-width: 420px;
   margin: 0;
+}
+
+.buildExample {
+  margin-bottom: 48px;
 }
 
 .features {
@@ -549,13 +550,11 @@
 @media (max-width: 820px) {
   .storySection {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "intro" "problem" "workaround" "flow" "motivation" "article";
+    grid-template-areas: "intro" "problem" "workaround" "declined" "motivation" "article";
     row-gap: var(--space-5);
   }
 
-  .storySection .sectionIntro > :global(figure) { margin-top: var(--space-5); }
   .storyContent { padding-top: 0; }
-  .storyFlow { margin-block: var(--space-2); }
 }
 
 @media (max-width: 700px) {
@@ -581,17 +580,17 @@
   .heroNote { margin-bottom: var(--space-4); }
   .storySection {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "intro" "problem" "workaround" "flow" "motivation" "article";
+    grid-template-areas: "intro" "problem" "workaround" "declined" "motivation" "article";
     row-gap: var(--space-5);
     padding-block: 56px;
   }
-  .sectionIntro > :global(figure) { margin-top: var(--space-5); }
   .storyContent { padding-top: 0; }
-  .storyFlow { margin-block: var(--space-2); }
-  .storyContent > div + div h3::before { width: 100%; padding-top: var(--space-4); }
+  .storyWorkaround h3::before,
+  .storyMotivation h3::before { width: 100%; padding-top: var(--space-4); }
   .buildSection { padding-block: 56px; }
   .buildHeading { align-items: start; flex-direction: column; gap: var(--space-4); }
   .buildDescription { max-width: 440px; }
+  .buildExample { margin-bottom: var(--space-8); }
   .features { grid-template-columns: 1fr; }
   .notificationFeature { grid-template-columns: 1fr; gap: var(--space-5); padding-top: var(--space-8); }
   .notificationPreview { justify-self: stretch; width: 100%; min-height: 0; padding: var(--space-5); }
