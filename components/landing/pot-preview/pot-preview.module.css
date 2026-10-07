@@ -66,10 +66,10 @@
 
 .appBar { zoom: 0.72; }
 
-.viewport { cursor: not-allowed; }
+.viewport { cursor: default; }
 .app { min-width: 0; padding: 0; margin: 0; border: 0; }
 .preview .app :disabled,
-.preview .app :disabled * { cursor: not-allowed; }
+.preview .app :disabled * { cursor: default; }
 
 .screen {
   zoom: 0.72;
@@ -136,7 +136,7 @@
   gap: var(--space-2);
   margin-top: var(--space-8);
   color: var(--color-text-muted);
-  font-size: 0.6875rem;
+  font-size: 0.8125rem;
 }
 
 .captionDot { width: 5px; height: 5px; border-radius: 50%; background: var(--color-primary); }

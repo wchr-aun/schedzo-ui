@@ -8,7 +8,7 @@ import {Footer} from "@/components/layout/footer/footer";
 import {PotPreview} from "@/components/landing/pot-preview/pot-preview";
 import {MonzoNotification} from "@/components/landing/monzo-notification/monzo-notification";
 import {MonzoTransaction} from "@/components/landing/monzo-transaction/monzo-transaction";
-import {PaymentFlow} from "@/components/landing/payment-flow/payment-flow";
+import {PaymentFlowExample} from "@/components/landing/payment-flow-example/payment-flow-example";
 import {RepositoryCard} from "@/components/landing/repository-card/repository-card";
 import {FeatureCard} from "@/components/landing/feature-card/feature-card";
 import {ScrollReveal} from "@/components/ui/scroll-reveal/scroll-reveal";
@@ -36,7 +36,7 @@ export function LandingPage() {
             <span>Schedzo<span className={styles.brandCaption}>On schedule.</span></span>
           </a>
           <div className={styles.navigationControls}>
-            <ExternalLink className={styles.consoleLink} href="/console">
+            <ExternalLink className={styles.consoleLink} href="/console" aria-label="Go to console (opens in a new tab)">
               Go to console
             </ExternalLink>
             <ThemeToggle />
@@ -48,68 +48,77 @@ export function LandingPage() {
         <section className={styles.hero} aria-labelledby="hero-heading">
           <ScrollReveal className={styles.heroCopy}>
             <p className={`${styles.eyebrow} ${styles.heroEyebrow}`}>
-              <span className={styles.dot} /> Less remembering. <span>More saving.</span>
+              <span className={styles.dot} /> <span>One less transfer to remember.</span>
             </p>
             <h1 id="hero-heading">Schedule your Monzo Pot transfers.</h1>
             <p className={styles.introduction}>
-              Automatically schedule money into and out of your Monzo Pots, including withdrawals from Savings Pots.
+              Plan recurring deposits and withdrawals between your Monzo balance and Pots, including supported Savings Pot withdrawals.
             </p>
             <p className={styles.invitation}>
-              Free to join. Get in touch and I&apos;ll help you get set up.
+              Currently free to join. Say hello and I&apos;ll help you get set up.
             </p>
-            <a className={styles.primaryLink} href="#join">Join us <ArrowIcon /></a>
+            <div className={styles.heroActions}>
+              <a className={styles.primaryLink} href="#join">Join us <ArrowIcon /></a>
+              <ExternalLink className={styles.secondaryLink} href="/demo" aria-label="Try the demo (opens in a new tab)">Try the demo</ExternalLink>
+            </div>
             <p className={styles.heroNote}>
-              <a href="#demo">Curious how it works? Try the demo.</a>
+              Sample accounts only. No real money moves.
             </p>
             <a className={styles.storyLink} href="#why">A little about the project <ArrowIcon direction="down" /></a>
           </ScrollReveal>
-          <ScrollReveal delay={120}><PotPreview transfersPage={transfersPage} /></ScrollReveal>
+          <ScrollReveal className={styles.heroPreview} delay={120}><PotPreview transfersPage={transfersPage} /></ScrollReveal>
         </section>
 
         <section id="why" className={styles.storySection} aria-labelledby="why-heading">
           <div className={styles.sectionIntro}>
             <ScrollReveal>
               <p className={styles.eyebrow}>01 / The motivation</p>
-              <h2 id="why-heading">Why I&apos;m<br />building this.</h2>
+              <h2 id="why-heading">Why I built Schedzo.</h2>
             </ScrollReveal>
-            <PaymentFlow transfer={storyTransfer} />
           </div>
           <div className={styles.storyContent}>
-            <ScrollReveal>
-              <h3>The problem.</h3>
-              <p>
-                Imagine payday is on the 28th and rent is due on the 15th. You could leave the rent money in a Savings Pot in the meantime, where it can keep earning interest. But Monzo doesn&apos;t let you schedule a recurring withdrawal from a Savings Pot for just before rent is due.
-              </p>
-            </ScrollReveal>
-            <ScrollReveal>
-              <h3>The workaround.</h3>
-              <p>
-                You can schedule rent from your main balance, then move the money from your Savings Pot into that balance yourself beforehand. It works, but you have to remember to do it at the right time.
-              </p>
-              <figure className={styles.declinedPreview}>
-                <ScrollReveal>
+            <div className={styles.storyProblem}>
+              <ScrollReveal>
+                <h3>Payday and rent don&apos;t always line up.</h3>
+                <p className={styles.storyText}>
+                  Imagine payday is on the 28th and rent is due on the 15th of the following month. You&apos;d like to keep the rent money in a Savings Pot between those dates, rather than leave it in your main balance.
+                </p>
+                <p className={styles.storyText}>
+                  I ran into this myself a few times. The rent money was in my Savings Pot, but I hadn&apos;t moved it back before the payment was due. The payment was declined.
+                </p>
+                <figure className={styles.declinedPreview}>
                   <MonzoTransaction revealTrigger="mount" kind="declined" amount={exampleRentAmount * 100} recipient="Landlord" initials="L" />
-                  <figcaption>Example of a declined scheduled payment.</figcaption>
+                  <figcaption>An illustration of my experience, using sample data.</figcaption>
+                </figure>
+              </ScrollReveal>
+            </div>
+            <div className={styles.storyResponse}>
+              <div className={styles.storyWorkaround}>
+                <ScrollReveal>
+                  <h3>The transfer I had to remember.</h3>
+                  <p className={styles.storyText}>
+                    Your rent payment is arranged separately through Monzo and comes from your main balance. Before it goes out, the money needs to move back from your Savings Pot. You can make that withdrawal yourself, but it&apos;s another monthly task to remember.
+                  </p>
                 </ScrollReveal>
-              </figure>
-            </ScrollReveal>
-            <ScrollReveal>
-              <h3>Why build my own?</h3>
-              <p>
-                <ExternalLink href="https://ifttt.com/monzo">IFTTT</ExternalLink> can automate some Monzo actions. I wanted to build a small, open-source tool focused on scheduled Pot transfers, including Savings Pot withdrawals.
-              </p>
-              <p>
-                I also wanted <strong>a small project to play around with APIs in UK banking</strong>.
-                Monzo already provides <ExternalLink href="https://docs.monzo.com">APIs to move money into and out of pots</ExternalLink>,
-                so this felt like a good place to start.
-              </p>
-            </ScrollReveal>
-            <ScrollReveal>
-              <p>
-                Want to understand the options? <a href="/schedule-monzo-savings-pot-withdrawals">Read how to schedule withdrawals from Monzo Savings Pots.</a>
-              </p>
-            </ScrollReveal>
+              </div>
+              <div className={styles.storyMotivation}>
+                <ScrollReveal>
+                  <h3>What I wanted to build.</h3>
+                  <p className={styles.storyText}>
+                    After it happened a few times, I wanted a small tool that could schedule the Pot withdrawal ahead of my rent payment, so I wouldn&apos;t have to remember to move the money myself each month.
+                  </p>
+                  <p className={styles.storyText}>
+                    I also wanted to explore APIs in UK banking and build a useful, open-source project around them.
+                  </p>
+                </ScrollReveal>
+              </div>
+            </div>
           </div>
+          <ScrollReveal className={styles.storyArticle}>
+            <p className={styles.storyText}>
+              Looking at other ways to do this? <a href="/schedule-monzo-savings-pot-withdrawals">Read the guide to scheduling Monzo Savings Pot withdrawals.</a>
+            </p>
+          </ScrollReveal>
         </section>
 
         <section id="building" className={styles.buildSection} aria-labelledby="building-heading">
@@ -119,45 +128,48 @@ export function LandingPage() {
               <h2 id="building-heading">So I built Schedzo.</h2>
             </div>
             <p className={styles.buildDescription}>
-              A small web app that helps schedule transfers into and out of pots,
-              without a limit on the number of scheduled transfers you can create.
+              Schedzo helps you schedule recurring transfers into and out of your Pots.
             </p>
           </ScrollReveal>
+          <div className={styles.buildExample}>
+            <PaymentFlowExample transfer={storyTransfer} heading="Here’s how the rent example works." />
+          </div>
           <div className={styles.features}>
             <ScrollReveal>
               <FeatureCard
                 number="01"
-                title="Schedule money in or out."
-                description="Create recurring deposits or withdrawals between your pots and main balance."
+                title="Move money in either direction."
+                description="Schedule deposits into a Pot or withdrawals back to its associated Monzo balance."
               />
             </ScrollReveal>
             <ScrollReveal>
               <FeatureCard
                 number="02"
-                title="Make as many plans as you need."
-                description="No limit on the number of scheduled transfers you can create."
+                title="Choose a recurring schedule."
+                description="Set an amount, a starting date and time, and a daily, weekly, or monthly frequency."
               />
             </ScrollReveal>
             <ScrollReveal>
               <FeatureCard
                 number="03"
-                title="Keep track of your plans."
-                description="See what's coming next, filter transfers by status, and cancel pending transfers."
+                title="See what’s coming next."
+                description="Review upcoming transfers, filter by status, and cancel pending transfers you no longer need."
               />
             </ScrollReveal>
           </div>
           <div className={styles.notificationFeature}>
             <ScrollReveal className={styles.notificationCopy}>
-              <h3>Know what happened.</h3>
+              <h3>Know how the transfer went.</h3>
               <p>
-                When a scheduled transfer runs, whether it succeeds or fails, the app sends
-                a notification to your Monzo app so you know what happened.
+                Schedzo sends a notification to your Monzo app as soon as a scheduled transfer completes or fails. Delivery depends on Monzo&apos;s API.
               </p>
             </ScrollReveal>
-            <figure className={styles.notificationPreview}>
-              <MonzoNotification title="🎉 £50.00 deposited" />
-              <figcaption>Example notification</figcaption>
-            </figure>
+            <ScrollReveal effect="popup" className={styles.notificationPreview}>
+              <MonzoNotification
+                title="🎉 £50.00 deposited"
+                caption="Example transfer notification using sample data."
+              />
+            </ScrollReveal>
           </div>
         </section>
 
@@ -166,41 +178,43 @@ export function LandingPage() {
             <p className={styles.eyebrow}>03 / Interactive demo</p>
             <h2 id="demo-heading">Take a look around.</h2>
             <p className={styles.demoDescription}>
-              Explore sample accounts and pots, create a schedule, or cancel a transfer.
-              No Monzo account needed, and no real money moves.
+              Explore sample accounts and Pots, create a recurring transfer, and review or cancel a pending transfer.
+              No Monzo account needed, and no real money moves. The demo resets when you refresh, so feel free to experiment.
             </p>
           </ScrollReveal>
           <ScrollReveal>
-            <ExternalLink className={styles.primaryLink} href="/demo" aria-label="Open demo (opens in a new tab)" title="Opens in a new tab">Open demo</ExternalLink>
+            <ExternalLink className={styles.primaryLink} href="/demo" aria-label="Open the demo (opens in a new tab)">Open the demo</ExternalLink>
           </ScrollReveal>
         </section>
 
         <section id="code" className={styles.codeSection} aria-labelledby="code-heading">
           <ScrollReveal>
             <p className={styles.eyebrow}>04 / Open source</p>
-            <h2 id="code-heading">Prefer to host it yourself?</h2>
+            <h2 id="code-heading">Built in the open.</h2>
           </ScrollReveal>
           <ScrollReveal className={styles.codeDescription}>
-            <p>All the code is open source. Feel free to fork it, copy it, and run it on your own server.</p>
+            <p>I wanted this to be a project people could inspect, learn from, and run themselves. All the code is open source.</p>
+            <p>If you prefer to host it yourself, the repositories include setup instructions. You&apos;ll need to configure your own Monzo developer credentials and server environment.</p>
+            <p>You connect your account through Monzo&apos;s authorisation flow. Schedzo uses that access to read your account and Pot details and run the Pot transfers you schedule. <a href="/schedule-monzo-savings-pot-withdrawals">Read how account access, stored data, and disconnecting work.</a></p>
           </ScrollReveal>
           <div className={styles.repositories}>
             <ScrollReveal>
               <RepositoryCard
                 href="https://github.com/wchr-aun/schedzo-ui"
-                title="Frontend code"
-                description="The website and console for your accounts, pots, and scheduled transfers."
+                title="Website and console"
+                description="The landing page, demo, and console for browsing accounts, Pots, and scheduled transfers."
                 stack={['TypeScript', 'Next.js']}
-                stackLabel="Frontend language and framework"
+                stackLabel="Website language and framework"
                 license="MIT License"
               />
             </ScrollReveal>
             <ScrollReveal>
               <RepositoryCard
                 href="https://github.com/wchr-aun/schedzo"
-                title="Backend code"
-                description="The scheduler that runs your transfers and sends updates to Monzo."
+                title="Scheduler"
+                description="The service that manages schedules, runs Pot transfers, and reports their outcomes."
                 stack={['Python', 'FastAPI']}
-                stackLabel="Backend language and framework"
+                stackLabel="Scheduler language and framework"
                 license="MIT License"
               />
             </ScrollReveal>
@@ -209,18 +223,14 @@ export function LandingPage() {
 
         <section id="join" className={styles.joinSection} aria-labelledby="join-heading">
           <ScrollReveal>
-            <p className={styles.eyebrow}>05 / Join us</p>
+            <p className={styles.eyebrow}>05 / Say hello</p>
             <h2 id="join-heading">You&apos;re welcome to join.</h2>
             <p className={styles.joinDescription}>
-              It&apos;s free to join, and you can use Schedzo right here with your own Monzo account —
-              no need to host anything yourself.
-              It&apos;s a small personal project with room for a few people, so drop me a message
-              if you&apos;d like to give it a go.
+              Schedzo is a small personal project, currently free to join, with room for a few people. You can use it with your own Monzo account without hosting anything yourself.
+              If you&apos;d like to give it a go, drop me an email and I&apos;ll help you get set up.
             </p>
             <p className={styles.joinDescription}>
-              To help you get set up, I&apos;ll need your Monzo user ID. You can find it by signing in
-              to the <ExternalLink href="https://developers.monzo.com/" aria-label="Monzo developer portal (opens in a new tab)">Monzo developer portal</ExternalLink>.
-              Please include it in your email.
+              Include your Monzo user ID in your email. You can find it by signing in to the <ExternalLink href="https://developers.monzo.com/" aria-label="Monzo developer portal (opens in a new tab)">Monzo developer portal</ExternalLink>. I&apos;ll use it to help set up your access.
             </p>
           </ScrollReveal>
           <ScrollReveal className={styles.joinActions}>
@@ -229,7 +239,7 @@ export function LandingPage() {
               Or copy: <CopyableContent value="join@schedzo.app">join@schedzo.app</CopyableContent>
             </p>
             <p className={styles.joinNote}>
-              Already have access? <a href="/console">Go to console.</a>
+              Already have access? <ExternalLink href="/console" aria-label="Go to console (opens in a new tab)">Go to console.</ExternalLink>
             </p>
           </ScrollReveal>
         </section>

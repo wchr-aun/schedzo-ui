@@ -320,85 +320,8 @@
   background: var(--color-status-completed-background);
 }
 
-.example {
-  display: grid;
-  align-items: start;
-  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
-  gap: var(--space-6);
-  padding: var(--space-6);
+.flowExample {
   margin-top: var(--space-8);
-  border: 1px solid var(--color-border);
-  border-radius: 16px;
-  background: var(--color-status-completed-background);
-}
-
-.exampleCopy {
-  padding-top: var(--space-2);
-}
-
-.exampleCopy h3 {
-  margin: 0 0 var(--space-6);
-  color: var(--color-heading);
-  font-size: 2rem;
-  line-height: 1.1;
-  letter-spacing: -.045em;
-}
-
-.flowSummary {
-  display: grid;
-  gap: var(--space-6);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: flow;
-}
-
-.flowSummary li {
-  position: relative;
-  padding-left: var(--space-8);
-  counter-increment: flow;
-}
-
-.flowSummary li::before {
-  content: counter(flow, decimal-leading-zero);
-  position: absolute;
-  left: 0;
-  top: 2px;
-  color: var(--color-primary);
-  font-size: .6875rem;
-  font-weight: 700;
-}
-
-.flowSummary strong {
-  display: block;
-  color: var(--color-heading);
-  font-size: .875rem;
-  line-height: 1.5;
-}
-
-.flowSummary span {
-  display: block;
-  margin-top: var(--space-1);
-  color: var(--color-text-muted);
-  font-size: .8125rem;
-  line-height: 1.6;
-}
-
-.exampleNote {
-  margin: var(--space-8) 0 0;
-  color: var(--color-text-muted);
-  font-size: .75rem;
-  line-height: 1.6;
-}
-
-.examplePlayer {
-  min-width: 0;
-}
-
-/* Keep article typography out of the reused, self-contained demo. */
-.examplePlayer > figure {
-  margin: 0;
-  zoom: .74;
 }
 
 .section > .note {
@@ -492,25 +415,8 @@
     grid-template-columns: 190px minmax(0, 1fr);
     gap: var(--space-10);
   }
-
-  .example {
-    grid-template-columns: 1fr;
-  }
-
-  .exampleCopy h3 br {
-    display: none;
-  }
-
-  .examplePlayer {
-    width: min(100%, 420px);
-    margin-inline: auto;
-  }
-
-  .examplePlayer > figure {
-    zoom: 1;
-  }
-
 }
+
 @media (max-width: 850px) {
   .articleLayout {
     grid-template-columns: 1fr;
@@ -612,10 +518,6 @@
 
   .option, .closing {
     padding: var(--space-5);
-  }
-
-  .example {
-    padding: var(--space-4);
   }
 
 }
