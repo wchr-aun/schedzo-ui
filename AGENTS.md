@@ -191,7 +191,11 @@ For authentication changes, also test:
 - Include desktop and mobile views when responsive layout is affected. Use video
   when an interaction or animation is better explained through motion.
 - Capture rendered UI and attach the evidence to GitHub so reviewers can view it
-  directly in the PR. Keep screenshots and recordings out of application assets.
+  directly in the PR. Use direct PR attachments, as described in
+  [GitHub's attachment documentation](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/attaching-files).
+- Never commit or push PR evidence images or recordings into the repository,
+  including under `.github/pr-evidence/`. Keep captures in a temporary directory
+  outside the checkout and attach them directly when publishing is authorized.
 - Use example data and keep private account information, credentials, and secrets
   out of visual evidence.
 
@@ -268,13 +272,14 @@ the CSS-pixel dimensions. See
   captures to include the flow and its context. Label extended capture heights
   explicitly, and separately check scrolling at a normal phone viewport, such
   as 390 × 844.
-- Keep clearly named evidence outside application assets. This PR used
-  `.github/pr-evidence/<number>/base-<section>-<device>.png` and
-  `updated-<section>-<device>.png`, with a README recording capture conditions.
-  When publishing is authorized, embed the GitHub-hosted images in the PR body
-  using URLs pinned to the pushed commit SHA. Refresh the image URLs when later
-  commits replace screenshots, and verify the files are accessible on GitHub.
-  Capturing evidence does not itself authorize a commit or push.
+- Keep clearly named evidence in a temporary directory outside the checkout,
+  such as `base-<section>-<device>.png` and `updated-<section>-<device>.png`.
+  Record the base SHA, viewport, theme, example data, and interaction state in
+  the PR description. When publishing is authorized, upload captures as direct
+  PR attachments and embed the returned GitHub attachment URLs. Verify that
+  reviewers can view them. Do not use repository commits or raw-file URLs to
+  publish evidence, and do not fall back to committing captures if uploading
+  attachments fails. Capturing evidence does not authorize a commit or push.
 
 ## Scope and safety
 
