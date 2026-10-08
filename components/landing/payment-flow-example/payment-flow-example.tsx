@@ -1,6 +1,6 @@
 import type {ReactNode} from "react";
 import type {ScheduledTransfer} from "@/lib/scheduled-transfers/types";
-import {PaymentFlow} from "@/components/landing/payment-flow/payment-flow";
+import {PaymentFlowPreview} from "./payment-flow-preview";
 import {ScrollReveal} from "@/components/ui/scroll-reveal/scroll-reveal";
 import styles from "./payment-flow-example.module.css";
 
@@ -42,7 +42,7 @@ export function PaymentFlowExample({transfer, heading, animated = true, containe
           ? <ScrollReveal className={styles.copy}>{copy}</ScrollReveal>
           : <div className={styles.copy}>{copy}</div>}
         <div className={styles.preview} data-contained={contained || undefined}>
-          <PaymentFlow transfer={transfer} potName={potName} animated={animated} contained={contained} />
+          <PaymentFlowPreview transfer={transfer} potName={potName} animated={animated} contained={contained} />
         </div>
       </div>
     </div>

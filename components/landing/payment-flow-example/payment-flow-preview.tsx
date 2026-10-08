@@ -9,9 +9,9 @@ import {MonzoTransaction} from "@/components/landing/monzo-transaction/monzo-tra
 import revealStyles from "@/components/ui/scroll-reveal/scroll-reveal.module.css";
 import {paymentFlowStageDuration, usePaymentFlowPlayback, type PaymentFlowStage} from "./use-payment-flow-playback";
 import {usePaymentFlowScroll} from "./use-payment-flow-scroll";
-import styles from "./payment-flow.module.css";
+import styles from "./payment-flow-preview.module.css";
 
-type PaymentFlowProps = {
+type PaymentFlowPreviewProps = {
   transfer: ScheduledTransfer;
   potName?: string;
   animated?: boolean;
@@ -26,13 +26,13 @@ const stages: {stage: PaymentFlowStage; label: string; replayLabel: string; stat
   {stage: 3, label: "Monzo · Scheduled payment", replayLabel: "Rent sent to landlord", status: "Rent sent to landlord"},
 ];
 
-export function PaymentFlow({transfer, potName = "Rainy day", animated = true, contained = false}: PaymentFlowProps) {
+export function PaymentFlowPreview({transfer, potName = "Rainy day", animated = true, contained = false}: PaymentFlowPreviewProps) {
   return animated
-    ? <AnimatedPaymentFlow transfer={transfer} potName={potName} contained={contained} />
-    : <PaymentFlowView transfer={transfer} potName={potName} contained={contained} />;
+    ? <AnimatedPaymentFlowPreview transfer={transfer} potName={potName} contained={contained} />
+    : <PaymentFlowPreviewView transfer={transfer} potName={potName} contained={contained} />;
 }
 
-function AnimatedPaymentFlow({transfer, potName, contained}: FlowContentProps) {
+function AnimatedPaymentFlowPreview({transfer, potName, contained}: FlowContentProps) {
   const reveal = useScrollReveal<HTMLElement>();
   const [inView, setInView] = useState(true);
 
@@ -53,10 +53,10 @@ function AnimatedPaymentFlow({transfer, potName, contained}: FlowContentProps) {
     scheduledFor: transfer.scheduled_for,
   });
 
-  return <PaymentFlowView transfer={transfer} potName={potName} contained={contained} reveal={reveal} playback={playback} />;
+  return <PaymentFlowPreviewView transfer={transfer} potName={potName} contained={contained} reveal={reveal} playback={playback} />;
 }
 
-function PaymentFlowView({transfer, potName, contained, reveal, playback}: FlowContentProps & {
+function PaymentFlowPreviewView({transfer, potName, contained, reveal, playback}: FlowContentProps & {
   reveal?: ReturnType<typeof useScrollReveal<HTMLElement>>;
   playback?: ReturnType<typeof usePaymentFlowPlayback>;
 }) {

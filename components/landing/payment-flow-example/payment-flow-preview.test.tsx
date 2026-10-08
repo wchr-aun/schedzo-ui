@@ -1,7 +1,7 @@
 import {act, fireEvent, render, screen, within} from "@testing-library/react";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import {createPreviewTransfersPage} from "@/lib/scheduled-transfers/preview";
-import {PaymentFlow} from "./payment-flow";
+import {PaymentFlowPreview} from "./payment-flow-preview";
 
 const observers = new Map<Element, Set<IntersectionObserverCallback>>();
 let reducedMotion = false;
@@ -9,7 +9,7 @@ const preferenceListeners = new Set<() => void>();
 
 function renderFlow(props: {animated?: boolean; potName?: string; contained?: boolean} = {}) {
   const transfer = createPreviewTransfersPage().scheduledTransfers[1];
-  render(<PaymentFlow transfer={{...transfer, amount: 227_300}} {...props} />);
+  render(<PaymentFlowPreview transfer={{...transfer, amount: 227_300}} {...props} />);
   return screen.getByRole("figure", {name: "Example of a pot withdrawal followed by a payment scheduled in Monzo"});
 }
 
@@ -25,7 +25,7 @@ function advance(milliseconds = 2_000) {
   act(() => vi.advanceTimersByTime(milliseconds));
 }
 
-describe("PaymentFlow", () => {
+describe("PaymentFlowPreview", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     observers.clear();
@@ -188,7 +188,7 @@ describe("PaymentFlow", () => {
 
   it("clears active timers when unmounted", () => {
     const transfer = createPreviewTransfersPage().scheduledTransfers[1];
-    const {unmount} = render(<PaymentFlow transfer={transfer} />);
+    const {unmount} = render(<PaymentFlowPreview transfer={transfer} />);
     const flow = screen.getByRole("figure", {name: "Example of a pot withdrawal followed by a payment scheduled in Monzo"});
     enter(flow);
     expect(vi.getTimerCount()).toBeGreaterThan(0);
