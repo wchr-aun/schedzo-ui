@@ -132,7 +132,7 @@ export function LandingPage() {
             </p>
           </ScrollReveal>
           <div className={styles.buildExample}>
-            <PaymentFlowExample transfer={storyTransfer} heading="Here’s how the rent example works." />
+            <PaymentFlowExample transfer={storyTransfer} heading="Here’s how the rent example works." contained />
           </div>
           <div className={styles.features}>
             <ScrollReveal>

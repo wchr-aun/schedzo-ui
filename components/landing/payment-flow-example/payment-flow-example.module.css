@@ -89,6 +89,11 @@
   justify-self: center;
 }
 
+.preview[data-contained="true"] {
+  display: grid;
+  align-self: stretch;
+}
+
 @container payment-flow-example (min-width: 900px) {
   .example {
     grid-template-columns: minmax(0, 1fr) 480px;
