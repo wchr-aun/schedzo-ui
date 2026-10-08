@@ -7,7 +7,7 @@ const observers = new Map<Element, Set<IntersectionObserverCallback>>();
 let reducedMotion = false;
 const preferenceListeners = new Set<() => void>();
 
-function renderFlow(props: {animated?: boolean; potName?: string} = {}) {
+function renderFlow(props: {animated?: boolean; potName?: string; contained?: boolean} = {}) {
   const transfer = createPreviewTransfersPage().scheduledTransfers[1];
   render(<PaymentFlow transfer={{...transfer, amount: 227_300}} {...props} />);
   return screen.getByRole("figure", {name: "Example of a pot withdrawal followed by a payment scheduled in Monzo"});
@@ -146,8 +146,28 @@ describe("PaymentFlow", () => {
     expect(screen.queryByRole("group", {name: "Replay payment flow"})).not.toBeInTheDocument();
     expect(screen.queryByText(/Next step in/)).not.toBeInTheDocument();
     expect(observers.size).toBe(0);
+    expect(screen.queryByRole("region", {name: "Payment flow steps"})).not.toBeInTheDocument();
     expect(timeout.mock.calls.some(([, delay]) => delay === 2_000)).toBe(false);
     timeout.mockRestore();
+  });
+
+  it("makes overflowing steps keyboard reachable with a directional scroll hint", () => {
+    renderFlow({contained: true});
+    const viewport = screen.getByRole("region", {name: "Payment flow steps"});
+    expect(viewport).not.toHaveAttribute("tabindex");
+    Object.defineProperties(viewport, {scrollHeight: {value: 600}, clientHeight: {value: 200}});
+    fireEvent.resize(window);
+    expect(viewport).toHaveAttribute("tabindex", "0");
+    expect(viewport).toHaveAccessibleDescription("Scroll to see more");
+    fireEvent.wheel(viewport);
+    viewport.scrollTop = 400;
+    fireEvent.scroll(viewport);
+    expect(viewport).toHaveAccessibleDescription("Scroll to see earlier steps");
+    viewport.scrollTop = 0;
+    fireEvent.scroll(viewport);
+    expect(viewport).toHaveAccessibleDescription("Scroll to see more");
+    expect(screen.getByRole("button", {name: "Replay step 3: Rent sent to landlord"})).toBeVisible();
+    expect(viewport).not.toContainElement(screen.getByRole("group", {name: "Replay payment flow"}));
   });
 
   it("completes active playback when reduced motion is enabled and keeps replay manual", () => {

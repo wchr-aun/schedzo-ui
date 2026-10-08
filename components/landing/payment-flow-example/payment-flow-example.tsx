@@ -13,10 +13,11 @@ const defaultExplanation = {
   note: "An illustration using sample data. No real money moves.",
 };
 
-export function PaymentFlowExample({transfer, heading, animated = true, potName, presentation = "standard", explanation = defaultExplanation}: {
+export function PaymentFlowExample({transfer, heading, animated = true, contained = false, potName, presentation = "standard", explanation = defaultExplanation}: {
   transfer: ScheduledTransfer;
   heading: ReactNode;
   animated?: boolean;
+  contained?: boolean;
   potName?: string;
   presentation?: "standard" | "compact";
   explanation?: {steps: readonly {title: string; description: string}[]; note: string};
@@ -40,8 +41,8 @@ export function PaymentFlowExample({transfer, heading, animated = true, potName,
         {animated
           ? <ScrollReveal className={styles.copy}>{copy}</ScrollReveal>
           : <div className={styles.copy}>{copy}</div>}
-        <div className={styles.preview}>
-          <PaymentFlow transfer={transfer} potName={potName} animated={animated} />
+        <div className={styles.preview} data-contained={contained || undefined}>
+          <PaymentFlow transfer={transfer} potName={potName} animated={animated} contained={contained} />
         </div>
       </div>
     </div>
