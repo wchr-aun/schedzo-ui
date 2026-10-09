@@ -1,0 +1,9 @@
+.preview {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-8);
+  min-width: 0;
+  container-type: inline-size;
+  /* Match the console instead of inheriting the article's prose line height. */
+  line-height: normal;
+}

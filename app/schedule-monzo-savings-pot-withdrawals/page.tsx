@@ -1,27 +1,47 @@
-import type {Metadata} from "next";
-import {SavingsPotArticle} from "@/components/landing/savings-pot-article/savings-pot-article";
+import type { Metadata } from "next";
+import { SavingsPotArticle } from "@/components/landing/savings-pot-article/savings-pot-article";
+import { instantAccessArticle } from "@/lib/content/instant-access-article";
+import { siteOrigin } from "@/lib/seo/site";
+
+const { title, description, path, modifiedDate, author, imagePath, imageAlt } = instantAccessArticle;
 
 export const metadata: Metadata = {
-  title: "How to Schedule Withdrawals from Monzo Savings Pots – Schedzo",
-  description:
-    "Monzo does not currently offer recurring withdrawals from Savings Pots in its app. Compare manual and IFTTT options, and learn how Schedzo can automate them.",
-  alternates: { canonical: "/schedule-monzo-savings-pot-withdrawals" },
+  title,
+  description,
+  alternates: { canonical: path },
   openGraph: {
-    title: "How to Schedule Withdrawals from Monzo Savings Pots | Schedzo",
-    description:
-      "Compare ways to schedule withdrawals from Monzo Savings Pots, including manual transfers, IFTTT, and Schedzo.",
-    url: "https://schedzo.app/schedule-monzo-savings-pot-withdrawals",
+    title,
+    description,
+    url: path,
     siteName: "Schedzo",
     type: "article",
+    modifiedTime: modifiedDate,
+    authors: [author.url],
   },
   twitter: {
-    card: "summary",
-    title: "How to Schedule Withdrawals from Monzo Savings Pots | Schedzo",
-    description:
-      "Compare ways to schedule withdrawals from Monzo Savings Pots, including manual transfers, IFTTT, and Schedzo.",
+    card: "summary_large_image",
+    title,
+    description,
+    images: [{ url: imagePath, alt: imageAlt }],
   },
 };
 
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "@id": new URL(`${path}#article`, siteOrigin).href,
+  url: new URL(path, siteOrigin).href,
+  headline: instantAccessArticle.headline,
+  description,
+  dateModified: modifiedDate,
+  author: { "@type": "Person", name: author.name, url: author.url },
+  image: new URL(imagePath, siteOrigin).href,
+  inLanguage: "en-GB",
+};
+
 export default function SavingsPotWithdrawalsPage() {
-  return <SavingsPotArticle />;
+  return <>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema).replace(/</g, "\\u003c") }} />
+    <SavingsPotArticle />
+  </>;
 }

@@ -33,9 +33,13 @@ const statusOptions = scheduledTransferStatuses.map((status) => ({
 export function ScheduledTransfers({
   accountId,
   potId,
+  hideFiltersWhenEmpty = false,
+  emptyMessage = "No scheduled transfers found.",
 }: {
   accountId: string;
   potId: string;
+  hideFiltersWhenEmpty?: boolean;
+  emptyMessage?: string;
 }) {
   const { fetchScheduledTransfers, request } = useConsoleClient();
   const scheduledTransfersKey = getScheduledTransfersKey(accountId, potId);
@@ -61,6 +65,8 @@ export function ScheduledTransfers({
   const [pendingSetupIds, setPendingSetupIds] = useState<Set<string>>(
     () => new Set(),
   );
+  const hasCustomStatusFilter = selectedStatuses.join(",") !== defaultScheduledTransferStatuses.join(",");
+  const showStatusFilter = !hideFiltersWhenEmpty || Boolean(data?.total) || hasCustomStatusFilter;
 
   useEffect(() => {
     if (selectedStatuses.join(",") === debouncedStatuses.join(",")) {
@@ -112,13 +118,13 @@ export function ScheduledTransfers({
   return (
     <Section
       action={
-        <MultiSelect
+        showStatusFilter ? <MultiSelect
           label="Status"
           minimumSelections={1}
           onChange={setSelectedStatuses}
           options={statusOptions}
           values={selectedStatuses}
-        />
+        /> : undefined
       }
       heading="Scheduled transfers"
       headingId="transfers-heading"
@@ -129,7 +135,7 @@ export function ScheduledTransfers({
       {!data && !error ? (
         <LoadingIndicator label="Loading scheduled transfers" />
       ) : !data ? null : data.scheduledTransfers.length === 0 ? (
-        <InlineMessage>No scheduled transfers found.</InlineMessage>
+        <InlineMessage>{emptyMessage}</InlineMessage>
       ) : (
         <ul className={styles.list}>
           {data.scheduledTransfers.map((transfer) => (

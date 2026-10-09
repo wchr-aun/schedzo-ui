@@ -4,9 +4,10 @@ import type {ReactNode} from "react";
 import "./globals.css";
 import {ToastProvider} from "@/components/providers/toast-provider/toast-provider";
 import {headers} from "next/headers";
+import {siteOrigin} from "@/lib/seo/site";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://schedzo.app"),
+  metadataBase: siteOrigin,
   title: "Schedzo – Schedule Transfers To & From Monzo Pots",
   description:
     "Schedule automatic transfers into and out of your Monzo pots, including Savings Pot withdrawals. Automate bills and keep money in savings until you need it.",

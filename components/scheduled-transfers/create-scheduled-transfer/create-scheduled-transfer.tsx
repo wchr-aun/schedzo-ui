@@ -32,21 +32,27 @@ export function CreateScheduledTransfer({
   accountId,
   potId,
   currency,
+  initiallyExpanded = false,
+  initialTransferType = "deposit",
+  initialAmount = "",
 }: {
   accountId: string;
   potId: string;
   currency: string;
+  initiallyExpanded?: boolean;
+  initialTransferType?: TransferType;
+  initialAmount?: string;
 }) {
   const { request } = useConsoleClient();
   const { mutate } = useSWRConfig();
   const toast = useToast();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(initiallyExpanded);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedDateTime, setSelectedDateTime] = useState("");
   const [minimumDateTime, setMinimumDateTime] = useState("");
   const [interval, setInterval] = useState<Interval>("monthly");
-  const [transferType, setTransferType] = useState<TransferType>("deposit");
-  const [amount, setAmount] = useState("");
+  const [transferType, setTransferType] = useState<TransferType>(initialTransferType);
+  const [amount, setAmount] = useState(initialAmount);
   const [message, setMessage] = useState<
     { kind: "error"; text: string } | undefined
   >();
@@ -61,8 +67,8 @@ export function CreateScheduledTransfer({
     if (isExpanded) {
       setSelectedDateTime("");
       setInterval("monthly");
-      setTransferType("deposit");
-      setAmount("");
+      setTransferType(initialTransferType);
+      setAmount(initialAmount);
     } else {
       const now = new Date();
       const earliestDateTime = getEarliestUkDateTime(now);
@@ -132,8 +138,8 @@ export function CreateScheduledTransfer({
       form.reset();
       setSelectedDateTime("");
       setInterval("monthly");
-      setTransferType("deposit");
-      setAmount("");
+      setTransferType(initialTransferType);
+      setAmount(initialAmount);
       setIsExpanded(false);
       toast.update(toastId, { tone: "success", message: "Scheduled transfer created." });
       await mutate((key) =>

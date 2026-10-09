@@ -53,7 +53,7 @@ export function InterestCalculation() {
         onBlur={() => setPosition(null)}
         onClick={showCalculation}
       >
-        £2.87 before tax
+        £2.70 before tax
       </button>
       {position ? (
         <span
@@ -63,9 +63,9 @@ export function InterestCalculation() {
           style={{"--tooltip-top": `${position.top}px`, "--tooltip-left": `${position.left}px`} as CSSProperties}
         >
           <span className={styles.content}>
-            <strong>Interest over 17 days</strong>
-            <span>£2,273 × ((1 + 0.0275)<sup>17/365</sup> − 1) ≈ £2.87</span>
-            <span>Converts 2.75% AER to an equivalent return over 17 days. Illustrative, before tax.</span>
+            <strong>Interest over 16 days</strong>
+            <span>£2,273 × ((1 + 0.0275)<sup>16/365</sup> − 1) ≈ £2.70</span>
+            <span>Converts 2.75% AER to an equivalent return over 16 days. Illustrative, before tax.</span>
           </span>
         </span>
       ) : null}
