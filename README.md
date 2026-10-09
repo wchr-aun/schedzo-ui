@@ -24,7 +24,7 @@ accounts and pots, and managing scheduled transfers.
 | Route | Purpose |
 | --- | --- |
 | `/` | Project landing page with a pot preview, story, features, and open-source links, and console access |
-| `/schedule-monzo-savings-pot-withdrawals` | Guide to Savings Pot withdrawal options, Schedzo, safety, and current limitations |
+| `/schedule-monzo-savings-pot-withdrawals` | Instant Access Savings guide comparing manual withdrawals, IFTTT and free Schedzo |
 | `/console` | Login when signed out; user identity, account list, balances, and logout when signed in |
 | `/demo` | Interactive console demo with simulated login and sample data |
 | `/demo/account/[accountId]` | Browse sample balances and pots |
@@ -50,6 +50,15 @@ Its demo section links to `/demo`. Scroll reveals animate
 this section; reaching the bottom of the page reveals any remaining hidden
 content, including the demo button.
 Landing page copy is editable in `components/landing/landing-page/landing-page.tsx`.
+
+The Instant Access Savings article keeps its guide, comparison, FAQ and citations
+server-rendered. Its interactive transfer example reuses `CreateScheduledTransfer`
+and `ScheduledTransfers` with an in-memory demo client, an empty starting history
+and a separate SWR cache. Creating or cancelling a sample transfer never calls the
+backend. The existing `SavingsInterestCalculator` keeps its design and formula,
+with a 16-day default matching the rent example.
+Provider claims, backend source references and remaining live-compatibility checks
+are recorded in [the article evidence register](docs/instant-access-article-evidence.md).
 
 The interactive demo at `/demo` reuses the live console components with an
 in-memory client and an isolated SWR cache. Login is immediate and requires no

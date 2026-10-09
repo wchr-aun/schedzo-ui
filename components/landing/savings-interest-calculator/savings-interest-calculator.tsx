@@ -2,11 +2,12 @@
 
 import {useId, useState} from "react";
 import {Money} from "@/components/ui/money/money";
+import {rentExample} from "@/lib/content/instant-access-article";
 import styles from "./savings-interest-calculator.module.css";
 
 const startingAmount = 2_273;
 const startingRate = 2.75;
-const startingDays = 17;
+const startingDays = rentExample.days;
 
 export function SavingsInterestCalculator() {
   const id = useId();

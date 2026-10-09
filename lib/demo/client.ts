@@ -5,12 +5,15 @@ import { getScheduledTransfersKey } from "@/lib/scheduled-transfers/keys";
 import { demoAccounts, demoPotsByAccount, demoEmptyPotIds } from "./fixtures";
 
 // Each mounted demo owns its store. No network fallback or browser persistence.
-export function createDemoClient(now = new Date()): ConsoleClient {
+export function createDemoClient(
+  now = new Date(),
+  { emptyHistory = false }: { emptyHistory?: boolean } = {},
+): ConsoleClient {
   const transfers = new Map<string, ScheduledTransfer[]>();
   let nextId = 0;
   for (const account of demoAccounts) {
     for (const pot of demoPotsByAccount[account.id].filter((pot) => !pot.deleted)) {
-      transfers.set(getScheduledTransfersKey(account.id, pot.id), demoEmptyPotIds.has(pot.id) ? [] : Array.from({ length: 80 }, (_, index) => {
+      transfers.set(getScheduledTransfersKey(account.id, pot.id), emptyHistory || demoEmptyPotIds.has(pot.id) ? [] : Array.from({ length: 80 }, (_, index) => {
         const status = scheduledTransferStatuses[index % scheduledTransferStatuses.length];
         const scheduledFor = new Date(now.getTime() + (status === "pending" ? index + 1 : -index - 1) * 86_400_000).toISOString();
         return {
